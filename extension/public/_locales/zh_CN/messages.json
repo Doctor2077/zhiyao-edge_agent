@@ -1,6 +1,6 @@
 {
   "extName": { "message": "执要 Agent" },
-  "extDescription": { "message": "圣人执要，四方来效——自带 API Key 的网页 AI 助手：理解当前页面并与之对话（网页操作功能即将推出，所有操作均需用户逐次确认）。" },
+  "extDescription": { "message": "圣人执要，四方来效——自带 API Key 的 Edge 侧边栏网页 AI 助手：与当前网页对话、AI 操作网页（逐步确认）、技能商店、整页翻译、媒体下载与定时检查。纯本地运行，数据不经过任何服务器。" },
   "actionTitle": { "message": "打开网页 AI 助手" },
   "navChat": { "message": "对话" },
   "navSkills": { "message": "技能" },

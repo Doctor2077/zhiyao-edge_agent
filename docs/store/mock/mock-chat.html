@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="app.css">
+<style>
+  body { margin: 0; }
+  .shot { display: flex; width: 1280px; height: 800px; overflow: hidden; background: #fff; }
+  .fake-page {
+    flex: 1; padding: 48px 64px; color: #1a1a1a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .fake-page h1 { font-size: 30px; margin: 0 0 6px; }
+  .fake-page .sub { color: #666; font-size: 14px; margin-bottom: 28px; }
+  .fake-page .price-card {
+    width: 340px; border: 1px solid #ddd; border-radius: 10px; padding: 18px 20px; margin-bottom: 24px;
+  }
+  .fake-page .price { font-size: 32px; font-weight: 700; color: #e00; }
+  .fake-page .price small { font-size: 15px; color: #999; font-weight: 400; margin-left: 6px; }
+  .fake-page .btn-buy {
+    display: inline-block; margin-top: 12px; background: #e00; color: #fff; padding: 8px 26px;
+    border-radius: 6px; font-size: 14px;
+  }
+  .fake-page p.desc { font-size: 14px; line-height: 1.9; color: #444; max-width: 560px; }
+  .fake-page h2 { font-size: 17px; margin: 26px 0 10px; }
+  .panel { border-left: 1px solid #e3e3e3; background: #fff; }
+</style>
+</head>
+<body>
+<div class="shot">
+  <div class="fake-page">
+    <h1>无线降噪耳机 Pro</h1>
+    <div class="sub">自营 · 次日达 · 已售 2.3 万件</div>
+    <div class="price-card">
+      <div style="font-size:13px;color:#888;margin-bottom:6px">到手价</div>
+      <div class="price">¥1,299<small>原价 ¥1,599</small></div>
+      <div style="font-size:12px;color:#e00;margin-top:8px">双十一满 1000 减 150 · 今晚 24:00 结束</div>
+      <span class="btn-buy">立即购买</span>
+    </div>
+    <p class="desc">
+      40mm 镀铍振膜，支持 LDAC 高解析音频；主动降噪深度 -48dB；续航 38 小时（开降噪 28 小时）。
+      附赠便携收纳盒与 Type-C 快充线，支持双设备同时连接。
+    </p>
+    <h2>规格参数</h2>
+    <p class="desc">蓝牙 5.4 · 重量 248g · IPX4 防水 · 触控操作 · 支持无线充电</p>
+  </div>
+
+  <div class="app panel" style="width:380px;height:800px">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark">
+          <svg width="22" height="22" viewBox="0 0 128 128"><g clip-path="url(#c1)"><path fill-rule="evenodd" fill="#000" d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122 L 128 122 L 128 6 Z M 88 88 m -6 0 a 6 6 0 1 0 12 0 a 6 6 0 1 0 -12 0 Z"/><circle cx="40" cy="40" r="6" fill="#000"/></g><rect x="14" y="14" width="100" height="100" rx="16" fill="none" stroke="#000" stroke-width="8"/><path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122" fill="none" stroke="#000" stroke-width="8"/><defs><clipPath id="c1"><rect x="14" y="14" width="100" height="100" rx="16"/></clipPath></defs></svg>
+        </span>
+        <span class="brand-name">执要 Agent</span>
+      </div>
+      <nav class="app-nav">
+        <button class="active">对话</button><button>技能</button><button>历史</button><button>设置</button><button>关于</button>
+      </nav>
+    </header>
+    <main class="app-main">
+      <div class="chat">
+        <div class="messages">
+          <div class="msg user"><div class="bubble">这个页面的耳机多少钱？有什么优惠？</div></div>
+          <div class="msg assistant"><div class="bubble">页面显示当前到手价 ¥1,299（原价 ¥1,599），正在参加双十一满 1000 减 150，优惠今晚 24:00 结束。已售 2.3 万件。</div></div>
+          <div class="msg assistant"><div class="bubble">需要我帮你对比历史价格，或找同款其他店铺的报价吗？</div></div>
+        </div>
+        <div class="page-chip"><span>📄</span>将发送：正文 4,213 字 · 视口 386 字 · 选中 0 字</div>
+        <div class="quick-skills">
+          <span class="quick-skills-label">快捷技能</span>
+          <button class="quick-chip">去广告</button>
+          <button class="quick-chip">翻译页面</button>
+          <button class="quick-chip">资源探索</button>
+        </div>
+        <div class="composer">
+          <button class="composer-plus" style="flex:none">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.5V12.5M1.5 7H12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          </button>
+          <textarea rows="2" placeholder="就当前页面提问…"></textarea>
+          <button class="send-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.5 12.5 7 7 12.5M12 7H1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+        </div>
+        <div class="tokens">约 128 tokens</div>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

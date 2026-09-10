@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="app.css">
+<style>
+  body { margin: 0; }
+  .shot { display: flex; width: 1280px; height: 800px; overflow: hidden; background: #fff; }
+  .fake-page {
+    flex: 1; padding: 48px 64px; color: #1a1a1a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .fake-page h1 { font-size: 30px; margin: 0 0 6px; }
+  .fake-page .sub { color: #666; font-size: 14px; margin-bottom: 28px; }
+  .fake-page h2 { font-size: 17px; margin: 26px 0 10px; }
+  .fake-page p.desc { font-size: 14px; line-height: 1.9; color: #444; max-width: 560px; }
+  .panel { border-left: 1px solid #e3e3e3; background: #fff; }
+</style>
+</head>
+<body>
+<div class="shot">
+  <div class="fake-page">
+    <h1>边栏里的 AI：读页、对话、替你动手</h1>
+    <div class="sub">自带 API Key · 纯本地 · 无服务器</div>
+    <p class="desc">
+      技能是注入给 AI 的专业指令包：安装后在对话中自动生效，可随时启用或停用。
+      内置商店提供总结、翻译、去广告、去 AI 味、数据分析等 21 个技能，一次点击即装即用。
+    </p>
+    <h2>设置页</h2>
+    <p class="desc">
+      模型服务、语言、定时任务、日志都在设置中集中管理；密钥只存本机，页面内容只发给
+      你自己配置的模型服务，不经过任何服务器。
+    </p>
+  </div>
+
+  <div class="app panel" style="width:380px;height:800px">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark">
+          <svg width="22" height="22" viewBox="0 0 128 128"><g clip-path="url(#c2)"><path fill-rule="evenodd" fill="#000" d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122 L 128 122 L 128 6 Z M 88 88 m -6 0 a 6 6 0 1 0 12 0 a 6 6 0 1 0 -12 0 Z"/><circle cx="40" cy="40" r="6" fill="#000"/></g><rect x="14" y="14" width="100" height="100" rx="16" fill="none" stroke="#000" stroke-width="8"/><path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122" fill="none" stroke="#000" stroke-width="8"/><defs><clipPath id="c2"><rect x="14" y="14" width="100" height="100" rx="16"/></clipPath></defs></svg>
+        </span>
+        <span class="brand-name">执要 Agent</span>
+      </div>
+      <nav class="app-nav">
+        <button>对话</button><button>技能</button><button>历史</button><button class="active">设置</button><button>关于</button>
+      </nav>
+    </header>
+    <main class="app-main">
+      <div class="settings" style="padding:14px">
+        <h2 class="settings-heading">设置</h2>
+        <section class="settings-section">
+          <h3>语言</h3>
+          <div class="lang-options">
+            <button class="btn btn-small">跟随浏览器</button>
+            <button class="btn btn-small btn-primary">中文</button>
+            <button class="btn btn-small">English</button>
+          </div>
+        </section>
+        <section class="settings-section">
+          <h3>模型服务</h3>
+          <div class="provider-row active">
+            <span class="provider-avatar">D</span>
+            <div class="provider-main">
+              <span class="provider-name">DeepSeek<span class="active-dot"></span></span>
+              <span class="provider-sub">https://api.deepseek.com/v1 · deepseek-chat</span>
+            </div>
+            <button class="btn btn-small">编辑</button>
+          </div>
+          <div class="provider-row">
+            <span class="provider-avatar">O</span>
+            <div class="provider-main">
+              <span class="provider-name">OpenAI</span>
+              <span class="provider-sub">https://api.openai.com/v1 · gpt-4o-mini</span>
+            </div>
+            <button class="btn btn-small">编辑</button>
+          </div>
+        </section>
+        <section class="settings-section">
+          <h3>定时任务</h3>
+          <div class="task-row">
+            <div class="task-main">
+              <span class="provider-name">京东价格监控</span>
+              <span class="provider-sub">每天 09:00</span>
+              <span class="provider-sub">上次：9/10 09:00（成功）</span>
+            </div>
+            <div class="task-actions">
+              <button class="btn btn-small btn-primary">立即检查</button>
+            </div>
+          </div>
+        </section>
+        <section class="settings-section">
+          <h3>设置</h3>
+          <label class="switch-row">
+            <span class="switch-text">自动读取当前页面</span>
+            <span class="switch"><input type="checkbox" checked><span class="switch-track"><span class="switch-thumb"></span></span></span>
+          </label>
+          <label class="switch-row">
+            <span class="switch-text">发送前展示页面上下文</span>
+            <span class="switch"><input type="checkbox" checked><span class="switch-track"><span class="switch-thumb"></span></span></span>
+          </label>
+          <label class="switch-row">
+            <span class="switch-text">在本机记住密钥<small>将以明文保存在本机浏览器配置中</small></span>
+            <span class="switch"><input type="checkbox"><span class="switch-track"><span class="switch-thumb"></span></span></span>
+          </label>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

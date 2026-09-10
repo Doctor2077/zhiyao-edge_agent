@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="app.css">
+<style>
+  body { margin: 0; }
+  .shot { display: flex; width: 1280px; height: 800px; overflow: hidden; background: #fff; }
+  .fake-page {
+    flex: 1; padding: 48px 64px; color: #1a1a1a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .fake-page h1 { font-size: 30px; margin: 0 0 6px; }
+  .fake-page .sub { color: #666; font-size: 14px; margin-bottom: 28px; }
+  .fake-page h2 { font-size: 17px; margin: 26px 0 10px; }
+  .fake-page p.desc { font-size: 14px; line-height: 1.9; color: #444; max-width: 560px; }
+  .panel { border-left: 1px solid #e3e3e3; background: #fff; }
+</style>
+</head>
+<body>
+<div class="shot">
+  <div class="fake-page">
+    <h1>圣人执要，四方来效</h1>
+    <div class="sub">用户是执要的圣人，AI 是四方来效的助手</div>
+    <p class="desc">
+      关于页展示版本号、扩展介绍与反馈入口。如果这个扩展帮到了你，欢迎微信扫码赞赏，
+      请作者喝杯咖啡；有建议或想定制功能，也欢迎邮件联系。
+    </p>
+    <h2>开源</h2>
+    <p class="desc">项目以 MIT 协议开源：代码透明可审计，隐私条款清清楚楚。</p>
+  </div>
+
+  <div class="app panel" style="width:380px;height:800px">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark">
+          <svg width="22" height="22" viewBox="0 0 128 128"><g clip-path="url(#c3)"><path fill-rule="evenodd" fill="#000" d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122 L 128 122 L 128 6 Z M 88 88 m -6 0 a 6 6 0 1 0 12 0 a 6 6 0 1 0 -12 0 Z"/><circle cx="40" cy="40" r="6" fill="#000"/></g><rect x="14" y="14" width="100" height="100" rx="16" fill="none" stroke="#000" stroke-width="8"/><path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122" fill="none" stroke="#000" stroke-width="8"/><defs><clipPath id="c3"><rect x="14" y="14" width="100" height="100" rx="16"/></clipPath></defs></svg>
+        </span>
+        <span class="brand-name">执要 Agent</span>
+      </div>
+      <nav class="app-nav">
+        <button>对话</button><button>技能</button><button>历史</button><button>设置</button><button class="active">关于</button>
+      </nav>
+    </header>
+    <main class="app-main">
+      <div class="about">
+        <div class="about-hero">
+          <span class="about-logo">
+            <svg width="44" height="44" viewBox="0 0 128 128"><g clip-path="url(#c4)"><path fill-rule="evenodd" fill="#000" d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122 L 128 122 L 128 6 Z M 88 88 m -6 0 a 6 6 0 1 0 12 0 a 6 6 0 1 0 -12 0 Z"/><circle cx="40" cy="40" r="6" fill="#000"/></g><rect x="14" y="14" width="100" height="100" rx="16" fill="none" stroke="#000" stroke-width="8"/><path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122" fill="none" stroke="#000" stroke-width="8"/><defs><clipPath id="c4"><rect x="14" y="14" width="100" height="100" rx="16"/></clipPath></defs></svg>
+          </span>
+          <span class="about-name">执要 Agent</span>
+          <span class="about-version">版本 v1.0.0</span>
+        </div>
+        <p class="about-slogan">圣人执要，四方来效</p>
+        <section class="settings-section">
+          <h3>关于执要</h3>
+          <p class="about-intro">Edge 侧边栏里的网页 AI 助手：自带 OpenAI 兼容的 API Key，即可与当前网页对话，让 AI 动手操作网页，一键整页翻译，下载媒体资源，还能定时检查页面变化。所有数据只在你与你的模型服务之间流转，不经过任何服务器。</p>
+          <ul class="about-features">
+            <li>读当前网页并对话（正文 / 视口 / 选区）</li>
+            <li>Agent 操作网页：点击、输入、滚动等 17+ 工具</li>
+            <li>技能商店：21 个内置技能，点击即装即用</li>
+            <li>整页翻译直接替换（刷新即恢复）</li>
+            <li>定时检查页面，到点弹系统通知</li>
+          </ul>
+        </section>
+        <section class="settings-section">
+          <h3>反馈</h3>
+          <p class="about-intro">有建议、遇到问题或想定制功能？欢迎邮件联系作者：</p>
+          <a class="about-mail" href="mailto:3538982885@qq.com">3538982885@qq.com</a>
+        </section>
+        <section class="settings-section">
+          <h3>支持开发者</h3>
+          <p class="skills-hint">如果这个扩展帮到了你，欢迎微信扫码赞赏，请作者喝杯咖啡。</p>
+          <img class="about-qr" src="qr.jpg" alt="微信赞赏">
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>
