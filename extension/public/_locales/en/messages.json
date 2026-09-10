@@ -78,6 +78,7 @@
   "riskHint": { "message": "Every step is confirmed by default; use \"Approve & auto-run\" for task mode (critical actions like pay/submit/password still ask)." },
   "approveAuto": { "message": "Approve & auto-run" },
   "autoRunning": { "message": "Task mode: running remaining steps automatically (critical actions like pay/submit/password still ask). Click Stop anytime." },
+  "translationNotice": { "message": "Full-page translation in progress: do not scroll the page (scrolling shifts lazy-loaded content and misaligns translations) until it finishes." },
   "toolClick": { "message": "Click" },
   "toolType": { "message": "Type" },
   "toolSelect": { "message": "Select" },

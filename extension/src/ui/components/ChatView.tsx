@@ -132,6 +132,14 @@ export default function ChatView({
           </span>
         </div>
       )}
+      {chat.translating && (
+        <div className="banner banner-auto">
+          <span>
+            <span className="banner-icon">⏳</span>
+            {t('translationNotice')}
+          </span>
+        </div>
+      )}
 
       <div className="messages" ref={messagesRef} onScroll={handleMessagesScroll}>
         {chat.messages.length === 0 && (

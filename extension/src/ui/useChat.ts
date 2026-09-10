@@ -122,6 +122,8 @@ export interface UseChatResult {
   sessionSite: string | null;
   /** 任务模式：本次任务后续步骤自动执行（危险动作仍会确认） */
   autoMode: boolean;
+  /** 整页翻译进行中：面板显示「请勿滚动页面」提示 */
+  translating: boolean;
   /** 批准当前操作并开启自动执行 */
   approveAutoAction(): void;
   send(text: string, forceSkills?: Skill[]): Promise<void>;
@@ -213,6 +215,8 @@ export function useChat(): UseChatResult {
   /** 当前会话所关联的网站（历史加载时显示） */
   const [sessionSite, setSessionSite] = useState<string | null>(null);
   const [autoMode, setAutoMode] = useState(false);
+  /** 整页翻译进行中（显示「请勿滚动页面」横幅） */
+  const [translating, setTranslating] = useState(false);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   messagesRef.current = messages;
@@ -574,6 +578,11 @@ export function useChat(): UseChatResult {
           modelMsgs.push({ role: 'assistant', content: roundText });
         }
 
+        // 整页翻译链路：亮起「请勿滚动页面」横幅
+        if (call.tool === 'get_texts' || call.tool === 'translate_page') {
+          setTranslating(true);
+        }
+
         // snapshot：内部自动执行，无需确认
         if (call.tool === 'snapshot') {
           const snap = await getSnapshot();
@@ -813,6 +822,7 @@ export function useChat(): UseChatResult {
         }
       } finally {
         setStreaming(false);
+        setTranslating(false);
         abortRef.current = null;
       }
     },
@@ -852,6 +862,7 @@ export function useChat(): UseChatResult {
     setPageContext(null);
     setTokens(null);
     setReplyStats(null);
+    setTranslating(false);
     startedAtRef.current = 0;
     setSessionId(null);
     setPendingAction(null);
@@ -879,6 +890,7 @@ export function useChat(): UseChatResult {
     setPageContext(null);
     setTokens(null);
     setReplyStats(null);
+    setTranslating(false);
     startedAtRef.current = 0;
     setPendingAction(null);
     setActionLog([]);
@@ -907,6 +919,7 @@ export function useChat(): UseChatResult {
     pageAccessError,
     sessionSite,
     autoMode,
+    translating,
     send,
     stop,
     retryLast,

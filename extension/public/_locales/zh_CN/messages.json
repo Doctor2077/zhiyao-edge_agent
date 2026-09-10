@@ -78,6 +78,7 @@
   "riskHint": { "message": "默认每步确认；也可「批准并自动执行」进入任务模式（支付/提交/密码等关键动作仍会确认）。" },
   "approveAuto": { "message": "批准并自动执行" },
   "autoRunning": { "message": "任务模式：正在自动执行后续步骤（支付/提交/密码等关键动作仍会确认），随时可点「停止」中断" },
+  "translationNotice": { "message": "整页翻译进行中：请勿滚动页面（滚动会使懒加载内容变化、导致译文错位），直到翻译完成。" },
   "toolClick": { "message": "点击" },
   "toolType": { "message": "输入" },
   "toolSelect": { "message": "选择" },
