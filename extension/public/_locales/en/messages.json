@@ -1,6 +1,6 @@
 {
   "extName": { "message": "ZhiYao Agent" },
-  "extDescription": { "message": "The sage holds the essentials; all directions serve. A BYOK Edge sidebar AI assistant: chat about the current page, agent page actions with step-by-step confirmation, a skill store, in-place translation, media download and scheduled checks. Fully local; no data passes through any server." },
+  "extDescription": { "message": "The sage holds the essential; all directions serve. BYOK Edge sidebar AI: page chat, agent actions, skills, translation, checks." },
   "actionTitle": { "message": "Open Web AI Assistant" },
   "navChat": { "message": "Chat" },
   "navSkills": { "message": "Skills" },
