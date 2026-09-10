@@ -5,6 +5,7 @@ import {
   presetToConfig,
   type ProviderConfig,
 } from '@/core/providers';
+import { fetchModels } from '@/core/chatEngine';
 import { t, setLangOverride } from '../i18n';
 import { useSettings } from '../SettingsContext';
 import LogsSection from './LogsSection';
@@ -207,6 +208,10 @@ function ProviderForm({ initial, apiKey, onSave, onCancel, onTest }: ProviderFor
   const [key, setKey] = useState('');
   const [showKey, setShowKey] = useState(false);
   const [testing, setTesting] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [fetchResult, setFetchResult] = useState<{ ok: boolean; message: string } | null>(
+    null,
+  );
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(
     null,
   );
@@ -243,6 +248,31 @@ function ProviderForm({ initial, apiKey, onSave, onCancel, onTest }: ProviderFor
     setTesting(false);
   };
 
+  /** 从服务商 /models 端点拉取模型列表，自动填充（手动输入仍可作高级兜底） */
+  const handleFetchModels = async () => {
+    const cfg = buildConfig();
+    if (!cfg.baseUrl) {
+      setFetchResult({ ok: false, message: 'Base URL required' });
+      return;
+    }
+    const k = key.trim() || apiKey;
+    if (!k) {
+      setFetchResult({ ok: false, message: 'API Key required' });
+      return;
+    }
+    setFetching(true);
+    const r = await fetchModels(cfg, k);
+    if (r.ok && r.models) {
+      const ids = r.models;
+      setModelsText(ids.join(', '));
+      setActiveModel((cur) => (ids.includes(cur) ? cur : (ids[0] ?? '')));
+      setFetchResult({ ok: true, message: t('fetchModelsOk', { n: ids.length }) });
+    } else {
+      setFetchResult({ ok: false, message: r.message });
+    }
+    setFetching(false);
+  };
+
   return (
     <section className="settings-section provider-form">
       <h3>{name || t('addProvider')}</h3>
@@ -256,8 +286,25 @@ function ProviderForm({ initial, apiKey, onSave, onCancel, onTest }: ProviderFor
       </label>
       <label>
         {t('modelsLabel')}
-        <input value={modelsText} onChange={(e) => setModelsText(e.target.value)} />
+        <span className="models-input">
+          <input value={modelsText} onChange={(e) => setModelsText(e.target.value)} />
+          <button
+            type="button"
+            className="btn btn-small"
+            disabled={fetching}
+            onClick={() => void handleFetchModels()}
+          >
+            {fetching ? t('fetchingModels') : t('fetchModels')}
+          </button>
+        </span>
       </label>
+      {fetchResult && (
+        <p className={`test-result ${fetchResult.ok ? 'ok' : 'fail'}`}>
+          {fetchResult.ok
+            ? fetchResult.message
+            : `${t('fetchModelsFail')}: ${fetchResult.message}`}
+        </p>
+      )}
       <label>
         {t('modelLabel')}
         <select value={activeModel} onChange={(e) => setActiveModel(e.target.value)}>

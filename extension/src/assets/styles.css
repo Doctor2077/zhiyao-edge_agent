@@ -683,6 +683,18 @@ button {
   letter-spacing: 0.03em;
 }
 
+.models-input {
+  display: flex;
+  gap: 6px;
+}
+
+.models-input input {
+  flex: 1;
+  min-width: 0;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  letter-spacing: 0.03em;
+}
+
 .form-actions {
   display: flex;
   gap: 8px;

@@ -245,6 +245,48 @@ export interface TestConnectionResult {
   message: string;
 }
 
+export interface FetchModelsResult {
+  ok: boolean;
+  models?: string[];
+  message: string;
+}
+
+/** 从 OpenAI 兼容的 /models 端点拉取模型列表（设置页「获取模型列表」用） */
+export async function fetchModels(
+  config: ProviderConfig,
+  apiKey: string,
+): Promise<FetchModelsResult> {
+  try {
+    const url = `${config.baseUrl.replace(/\/+$/, '')}/models`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (!res.ok) {
+      const text = (await res.text().catch(() => '')).slice(0, 200);
+      return { ok: false, message: `HTTP ${res.status}${text ? ` ${text}` : ''}` };
+    }
+    const json = (await res.json()) as { data?: unknown };
+    const data = json?.data;
+    if (!Array.isArray(data)) {
+      return { ok: false, message: 'Response is not an OpenAI-compatible model list.' };
+    }
+    const models = data
+      .map((m) => (m as { id?: unknown })?.id)
+      .filter((x): x is string => typeof x === 'string' && x.trim() !== '')
+      .slice(0, 200);
+    if (models.length === 0) {
+      return { ok: false, message: 'Model list is empty.' };
+    }
+    return { ok: true, models, message: `${models.length} models` };
+  } catch {
+    return {
+      ok: false,
+      message:
+        'Cannot reach the /models endpoint. Grant origin access or check the URL.',
+    };
+  }
+}
+
 /** 发送一条最小请求验证 Key / Base URL / 模型名与网络可达性 */
 export async function testConnection(
   config: ProviderConfig,
