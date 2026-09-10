@@ -160,8 +160,12 @@ def main() -> int:
             dur = float(shot.get("speech", 0.0)) or len(text) / 4.4
             # 长句按标点在时间上按比例拆成两块
             if len(text) > 26:
-                cut = max(text.find("，", 9), text.find("：", 9), text.find("；", 9))
-                if cut <= 0:
+                # 在靠近中间的标点处断句，避免把「Edge 侧边栏」这类词组从中间切开
+                cands = [i for i, ch in enumerate(text) if ch in "。！？；：，、 " and 4 <= i <= len(text) - 5]
+                # 空格也允许断句，但加权惩罚：真标点优先，避免把「Edge 侧边栏」拆开
+                cut = (min(cands, key=lambda i: abs(i - len(text) / 2)
+                           + (0 if text[i] in "。！？；：，" else 7)) if cands else len(text) // 2)
+                if cut <= 0 or cut >= len(text) - 1:
                     cut = len(text) // 2
                 head, tail = text[: cut + 1], text[cut + 1 :]
                 mid = t0 + dur * len(head) / len(text)
