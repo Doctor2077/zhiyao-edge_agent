@@ -11,6 +11,15 @@
     'button, a[href], input, select, textarea, [role="button"], [role="link"], ' +
     '[role="checkbox"], [role="menuitem"], [role="tab"], [contenteditable="true"], summary';
 
+  /**
+   * 文字元素选择器：get_texts 与 translate_page 共用的「可翻译文字块」。
+   * 只取块级文字容器与独立文字元素——getDirectText 已经把内联子元素（span/a/b/em…）
+   * 的文本并进父块，这里再收内联元素会导致同一段文字被列两次、重复翻译。
+   */
+  var TEXT_SEL =
+    'h1, h2, h3, h4, h5, h6, p, li, dt, dd, td, th, caption, blockquote, figcaption, ' +
+    'summary, label, legend, button, a[href], [role="heading"], [role="button"]';
+
   function isVisible(el) {
     if (!el || !el.getBoundingClientRect) return false;
     var style = getComputedStyle(el);
