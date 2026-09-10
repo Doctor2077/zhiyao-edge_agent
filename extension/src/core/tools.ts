@@ -222,7 +222,7 @@ export const TOOLS: ToolDef[] = [
   {
     name: 'translate_page',
     description:
-      '按清单批量把页面文字替换为译文（仅本机生效，刷新恢复）。lang 为目标语言；items_json 为 [{index, text}] 的 JSON 字符串，index 对应 get_texts 返回的序号，text 为该元素的完整译文。',
+      '按清单批量把页面文字替换为译文（仅本机生效，刷新恢复）。lang 为目标语言；items_json 为 [{index, text}] 的 JSON 字符串，index 对应 get_texts 返回的序号，text 为该元素的完整译文。每批建议 80-100 条；清单总数超过一批时，必须连续多次调用本工具，直到覆盖清单全部条目。',
     risk: 2,
     needsTarget: false,
     confirmRequired: true,
@@ -393,8 +393,8 @@ export function validateToolCall(raw: unknown): ToolCallValidation {
         return { ok: false, error: 'items_json 不是合法的 JSON 字符串' };
       }
     }
-    if (!Array.isArray(rawItems) || rawItems.length === 0 || rawItems.length > 200) {
-      return { ok: false, error: 'translate_page 需要 items_json（1-200 条）' };
+    if (!Array.isArray(rawItems) || rawItems.length === 0 || rawItems.length > 1000) {
+      return { ok: false, error: 'translate_page 需要 items_json（1-1000 条）' };
     }
     const items: Array<{ index: number; text: string }> = [];
     for (const it of rawItems) {
@@ -405,8 +405,8 @@ export function validateToolCall(raw: unknown): ToolCallValidation {
       if (typeof o.index !== 'number' || !Number.isInteger(o.index) || o.index < 0) {
         return { ok: false, error: 'items[index] 必须是整数' };
       }
-      if (typeof o.text !== 'string' || o.text.length === 0 || o.text.length > 500) {
-        return { ok: false, error: 'items[text] 需为 1-500 字符' };
+      if (typeof o.text !== 'string' || o.text.length === 0 || o.text.length > 1500) {
+        return { ok: false, error: 'items[text] 需为 1-1500 字符' };
       }
       items.push({ index: o.index, text: o.text });
     }

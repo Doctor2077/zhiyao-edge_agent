@@ -292,7 +292,7 @@
     var out = [];
     var seen = new Set();
     var list = viewport.concat(rest);
-    for (var i = 0; i < list.length && out.length < 150; i++) {
+    for (var i = 0; i < list.length && out.length < 1000; i++) {
       var el = list[i];
       if (seen.has(el)) continue;
       var text = getDirectText(el);
@@ -301,7 +301,7 @@
       out.push({
         i: out.length,
         tag: el.tagName.toLowerCase(),
-        text: text.slice(0, 300),
+        text: text.slice(0, 1000),
         selector: stableSelector(el),
       });
     }

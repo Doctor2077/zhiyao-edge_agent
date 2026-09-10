@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { ChatError, streamChat, type RawToolCall } from '@/core/chatEngine';
 import { demoStream } from '@/core/demo';
@@ -36,6 +36,12 @@ import { t, uiLang } from './i18n';
 import { useSettings } from './SettingsContext';
 
 const MAX_STEPS = 10;
+
+/** 内部只读工具：自动执行、不消耗步数上限（避免长文翻译的批次被 10 步打断） */
+const INTERNAL_TOOLS = new Set(['snapshot', 'page_source', 'get_texts', 'get_media']);
+
+/** 按常见默认输出上限（4096 tokens）估算剩余时间，仅供进度参考 */
+const OUTPUT_CAP_TOKENS = 4096;
 
 /** 危险动作关键词：即使在任务模式下也必须二次确认 */
 const DANGER_RE =
@@ -86,6 +92,17 @@ export interface ActionProposal {
   needsConfirm: boolean;
 }
 
+/** 本轮回复的统计：用时 / token（本地估算，非精确计费）/ 预计剩余时间 */
+export interface ReplyStats {
+  elapsedMs: number;
+  inputTokens: number;
+  outputTokens: number;
+  /** 是否已结束（结束后不再显示 ETA） */
+  done: boolean;
+  /** 预计剩余秒数（仅流式中，按 4096 输出上限估算） */
+  etaSec: number | null;
+}
+
 export interface UseChatResult {
   messages: ChatMessage[];
   streaming: boolean;
@@ -94,6 +111,8 @@ export interface UseChatResult {
   errorOrigin: string | null;
   pageContext: PageContext | null;
   tokens: number | null;
+  /** 本轮回复统计（用时 / token 估算 / 预计剩余时间）；演示模式为 null */
+  replyStats: ReplyStats | null;
   sessionId: string | null;
   pendingAction: ActionProposal | null;
   actionLog: string[];
@@ -162,6 +181,9 @@ export function useChat(): UseChatResult {
   const [errorOrigin, setErrorOrigin] = useState<string | null>(null);
   const [pageContext, setPageContext] = useState<PageContext | null>(null);
   const [tokens, setTokens] = useState<number | null>(null);
+  const [replyStats, setReplyStats] = useState<ReplyStats | null>(null);
+  const startedAtRef = useRef(0);
+  const inputTokensRef = useRef(0);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<ActionProposal | null>(null);
   const [actionLog, setActionLog] = useState<string[]>([]);
@@ -181,6 +203,26 @@ export function useChat(): UseChatResult {
   const autoModeRef = useRef(false);
   autoModeRef.current = autoMode;
   const lastTextRef = useRef<string>('');
+
+  // 流式期间每 500ms 刷新一次回复统计（用时 / 已生成 token / 预计剩余时间）
+  useEffect(() => {
+    if (!streaming || startedAtRef.current === 0) return;
+    const timer = setInterval(() => {
+      const last = [...messagesRef.current].reverse().find((m) => m.role === 'assistant');
+      const out = estimateTokens(last?.content ?? '');
+      const elapsedMs = Date.now() - startedAtRef.current;
+      const rate = elapsedMs > 1000 ? out / (elapsedMs / 1000) : 0;
+      const remaining = Math.max(0, OUTPUT_CAP_TOKENS - out);
+      setReplyStats({
+        elapsedMs,
+        inputTokens: inputTokensRef.current,
+        outputTokens: out,
+        done: false,
+        etaSec: rate > 0 ? Math.round(remaining / rate) : null,
+      });
+    }, 500);
+    return () => clearInterval(timer);
+  }, [streaming]);
 
   const waitDecision = useCallback(
     () =>
@@ -376,6 +418,7 @@ export function useChat(): UseChatResult {
 
       appendUserBubble(text);
       appendAssistantBubble();
+      if (!useDemo) startedAtRef.current = Date.now(); // 统计起点（演示模式不统计）
       setStreaming(true);
       setDemo(useDemo);
       const ac = new AbortController();
@@ -402,6 +445,22 @@ export function useChat(): UseChatResult {
         lang: detectLang(ctx?.lang ?? browser.i18n.getUILanguage()),
         skills: allSkills,
       });
+
+      // 输入 token 估算（本地展示用，非精确计费）
+      if (!useDemo) {
+        inputTokensRef.current = modelMsgs.reduce(
+          (sum, m) =>
+            sum + estimateTokens(typeof m.content === 'string' ? m.content : '') + 8,
+          0,
+        );
+        setReplyStats({
+          elapsedMs: 0,
+          inputTokens: inputTokensRef.current,
+          outputTokens: 0,
+          done: false,
+          etaSec: null,
+        });
+      }
 
       const reportError = (err: ChatError) => {
         log('error', 'chat', `${err.code}: ${err.message}`);
@@ -653,6 +712,8 @@ export function useChat(): UseChatResult {
               stopped = true;
               break;
             }
+            // 内部只读工具不占步数：只扣回本轮计数，让翻译/操作批次吃满步数上限
+            if (INTERNAL_TOOLS.has(toolCalls[0]!.name)) steps--;
             continue;
           }
 
@@ -670,7 +731,19 @@ export function useChat(): UseChatResult {
         if (steps >= MAX_STEPS && !finalText && !stopped) {
           setLastAssistant(t('agentMaxSteps'));
         }
-        if (finalText) setTokens(estimateTokens(finalText));
+        if (finalText) {
+          const out = estimateTokens(finalText);
+          setTokens(out);
+          if (startedAtRef.current > 0) {
+            setReplyStats({
+              elapsedMs: Date.now() - startedAtRef.current,
+              inputTokens: inputTokensRef.current,
+              outputTokens: out,
+              done: true,
+              etaSec: null,
+            });
+          }
+        }
         await persistSession(text, finalText, ctx);
       } catch (err) {
         if (err instanceof ChatError) reportError(err);
@@ -722,6 +795,8 @@ export function useChat(): UseChatResult {
     setErrorOrigin(null);
     setPageContext(null);
     setTokens(null);
+    setReplyStats(null);
+    startedAtRef.current = 0;
     setSessionId(null);
     setPendingAction(null);
     setActionLog([]);
@@ -747,6 +822,8 @@ export function useChat(): UseChatResult {
     setErrorOrigin(null);
     setPageContext(null);
     setTokens(null);
+    setReplyStats(null);
+    startedAtRef.current = 0;
     setPendingAction(null);
     setActionLog([]);
     setPageAccessError(false);
@@ -767,6 +844,7 @@ export function useChat(): UseChatResult {
     errorOrigin,
     pageContext,
     tokens,
+    replyStats,
     sessionId,
     pendingAction,
     actionLog,

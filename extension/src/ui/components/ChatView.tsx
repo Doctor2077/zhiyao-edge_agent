@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { BUILTIN_SKILLS, type Skill } from '@/core/skills';
 import { t, uiLang } from '../i18n';
-import type { UseChatResult } from '../useChat';
+import type { ReplyStats, UseChatResult } from '../useChat';
 import { useSettings } from '../SettingsContext';
 import { langLabel } from './langLabel';
 import ActionCard from './ActionCard';
@@ -237,11 +237,22 @@ export default function ChatView({
         onSend={(text) => void chat.send(text)}
         onStop={chat.stop}
       />
-      {chat.tokens != null && (
-        <div className="tokens">{t('tokensUsed', { tokens: chat.tokens })}</div>
+      {chat.replyStats && (
+        <div className="tokens">{formatReplyStats(chat.replyStats)}</div>
       )}
     </div>
   );
+}
+
+/** 回复统计行：流式中显示用时/已生成/预计剩余；结束后显示输入输出合计 */
+function formatReplyStats(stats: ReplyStats): string {
+  const sec = Math.max(1, Math.round(stats.elapsedMs / 1000));
+  if (!stats.done) {
+    const eta =
+      stats.etaSec != null && stats.etaSec > 0 ? ` · ${t('statsEta', { s: stats.etaSec })}` : '';
+    return `${t('statsElapsed', { s: sec })} · ${t('statsOut', { n: stats.outputTokens })}${eta}`;
+  }
+  return `${t('statsElapsed', { s: sec })} · ${t('statsIn', { n: stats.inputTokens })} · ${t('statsOut', { n: stats.outputTokens })} · ${t('statsTotal', { n: stats.inputTokens + stats.outputTokens })}`;
 }
 
 function QuickSkills({
