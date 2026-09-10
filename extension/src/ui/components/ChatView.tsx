@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { BUILTIN_SKILLS, type Skill } from '@/core/skills';
 import { t, uiLang } from '../i18n';
@@ -24,6 +24,33 @@ export default function ChatView({
   const skillCtx = useSettings();
   const featured = BUILTIN_SKILLS.filter((s) => s.featured);
   const installedIds = new Set(skillCtx.installedSkills.map((s) => s.id));
+
+  // ---- 消息区自动下翻：跟随输出滚动；用户上翻阅读时不打扰 ----
+  const messagesRef = useRef<HTMLDivElement | null>(null);
+  const stickToBottomRef = useRef(true);
+
+  const handleMessagesScroll = () => {
+    const el = messagesRef.current;
+    if (!el) return;
+    stickToBottomRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+  };
+
+  // 初次挂载（含恢复历史会话）直接滚到底部
+  useEffect(() => {
+    const el = messagesRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, []);
+
+  // 内容变化（新消息 / 流式增量）：停在底部则跟随，最后一条是用户消息则强制跟随
+  useEffect(() => {
+    const el = messagesRef.current;
+    if (!el) return;
+    const last = chat.messages[chat.messages.length - 1];
+    if (stickToBottomRef.current || last?.role === 'user') {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [chat.messages]);
 
   const runQuick = async (s: Skill) => {
     // 未安装则自动安装；并启用（本消息用 forceSkills 保证立即生效）
@@ -106,7 +133,7 @@ export default function ChatView({
         </div>
       )}
 
-      <div className="messages">
+      <div className="messages" ref={messagesRef} onScroll={handleMessagesScroll}>
         {chat.messages.length === 0 && (
           <div className="empty">
             <span className="empty-mark">✦</span>
