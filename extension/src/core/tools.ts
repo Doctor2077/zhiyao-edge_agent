@@ -222,7 +222,7 @@ export const TOOLS: ToolDef[] = [
   {
     name: 'translate_page',
     description:
-      '按清单批量把页面文字替换为译文（仅本机生效，刷新恢复）。lang 为目标语言；items_json 为 [{index, text}] 的 JSON 字符串，index 对应 get_texts 返回的序号，text 为该元素的完整译文。每批建议 80-100 条；清单总数超过一批时，必须连续多次调用本工具，直到覆盖清单全部条目。',
+      '按清单批量把页面文字替换为译文（仅本机生效，刷新恢复）。lang 为目标语言；items_json 为 [{index, text}] 的 JSON 字符串，index 对应 get_texts 返回的序号，text 为该元素的完整译文。每批 60-100 条，但单批译文总输出必须控制在 4000 字以内（译文较长时减少本批条数）；清单总数超过一批时，必须连续多次调用本工具，直到覆盖清单全部条目。',
     risk: 2,
     needsTarget: false,
     confirmRequired: true,

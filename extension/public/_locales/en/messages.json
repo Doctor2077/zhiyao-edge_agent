@@ -70,6 +70,7 @@
   "actionResult": { "message": "Action result" },
   "actionCancelled": { "message": "Action cancelled." },
   "agentMaxSteps": { "message": "Reached the max of 10 action steps. Stopped. Describe the next step to continue." },
+  "toolInvalidRetry": { "message": "(The model returned an incomplete action; asking it to retry)" },
   "snapshotDone": { "message": "Read {n} interactive elements" },
   "riskLow": { "message": "Low risk" },
   "riskMid": { "message": "Medium risk" },

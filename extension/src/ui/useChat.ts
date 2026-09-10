@@ -156,7 +156,29 @@ export function sessionSiteLabel(session: Session): string | null {
 function tryParseJsonTool(text: string): { tool: string; args: unknown } | null {
   const s = text.trim();
   if (!s.startsWith('{')) return null;
-  const end = s.indexOf('}');
+  // 括号深度扫描取完整 JSON 对象（不能按首个 '}' 截断——参数值里可能含 '}'，如 items_json）
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  let end = -1;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i]!;
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === '\\') esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') inStr = true;
+    else if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) {
+        end = i;
+        break;
+      }
+    }
+  }
   if (end < 0) return null;
   try {
     const obj = JSON.parse(s.slice(0, end + 1)) as {
@@ -482,19 +504,7 @@ export function useChat(): UseChatResult {
         // 解析 + 白名单校验
         let call: ToolCall;
         if (raw) {
-          try {
-            const parsedArgs = JSON.parse(raw.arguments || '{}');
-            const v = validateToolCall({ tool: raw.name, args: parsedArgs });
-            if (!v.ok || !v.call) {
-              log('warn', 'tools', `invalid call ${raw.name}: ${v.error}`);
-              setLastAssistant('（模型返回了无效操作，已忽略）');
-              return true;
-            }
-            call = v.call;
-          } catch {
-            setLastAssistant('（模型返回了无法解析的操作，已忽略）');
-            return true;
-          }
+          // 先登记 assistant 的 tool_call（无论成败，错误回喂时模型需要它对齐）
           modelMsgs.push({
             role: 'assistant',
             content: roundText || null,
@@ -506,13 +516,59 @@ export function useChat(): UseChatResult {
               },
             ],
           });
+          let parsedArgs: unknown;
+          try {
+            parsedArgs = JSON.parse(raw.arguments || '{}');
+          } catch {
+            // 参数 JSON 被截断/无法解析：把错误回喂给模型重试，而不是直接停止
+            log('warn', 'tools', `unparseable args for ${raw.name}`);
+            setLastAssistant(t('toolInvalidRetry'));
+            modelMsgs.push({
+              role: 'tool',
+              tool_call_id: raw.id,
+              content: JSON.stringify({
+                ok: false,
+                error: '参数不是合法 JSON（可能被输出长度截断）',
+                hint: '请缩小批量规模、重新输出完整的 JSON 参数',
+              }),
+            });
+            appendAssistantBubble();
+            return false; // 继续循环，让模型重试（步数上限兜底）
+          }
+          const v = validateToolCall({ tool: raw.name, args: parsedArgs });
+          if (!v.ok || !v.call) {
+            log('warn', 'tools', `invalid call ${raw.name}: ${v.error}`);
+            setLastAssistant(t('toolInvalidRetry'));
+            modelMsgs.push({
+              role: 'tool',
+              tool_call_id: raw.id,
+              content: JSON.stringify({
+                ok: false,
+                error: v.error,
+                hint: '请修正参数后重试；若为批量翻译请减少单批条目数',
+              }),
+            });
+            appendAssistantBubble();
+            return false; // 继续循环，让模型重试
+          }
+          call = v.call;
         } else {
           const parsed = tryParseJsonTool(roundText);
           if (!parsed) return false;
           const v = validateToolCall(parsed);
           if (!v.ok || !v.call) {
-            setLastAssistant('（模型返回了无效操作，已忽略）');
-            return true;
+            setLastAssistant(t('toolInvalidRetry'));
+            modelMsgs.push({ role: 'assistant', content: roundText });
+            modelMsgs.push({
+              role: 'user',
+              content: JSON.stringify({
+                ok: false,
+                error: v.error,
+                hint: '请修正参数后重试；若为批量翻译请减少单批条目数',
+              }),
+            });
+            appendAssistantBubble();
+            return false; // 继续循环，让模型重试
           }
           call = v.call;
           modelMsgs.push({ role: 'assistant', content: roundText });
