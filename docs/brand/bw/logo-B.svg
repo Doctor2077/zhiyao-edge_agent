@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- 方案 B：四方归心 —— 四方来效，汇聚核心 -->
+  <g fill="#000000">
+    <path d="M 64 50 L 82 8 L 46 8 Z"/>
+    <path d="M 78 64 L 120 46 L 120 82 Z"/>
+    <path d="M 64 78 L 82 120 L 46 120 Z"/>
+    <path d="M 50 64 L 8 46 L 8 82 Z"/>
+  </g>
+  <circle cx="64" cy="64" r="8.5" fill="#000000"/>
+</svg>

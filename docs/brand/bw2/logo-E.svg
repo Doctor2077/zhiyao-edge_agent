@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- 方案 E：司南 —— 执一以定四方：磁针指一，四方来效 -->
+  <circle cx="64" cy="64" r="48" fill="none" stroke="#000000" stroke-width="8"/>
+  <path d="M 64 26 L 72 64 L 64 102 L 56 64 Z" fill="#000000"/>
+  <!-- 针眼：白点镂空 -->
+  <circle cx="64" cy="64" r="7" fill="#FFFFFF"/>
+</svg>

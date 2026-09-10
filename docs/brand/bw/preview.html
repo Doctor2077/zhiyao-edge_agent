@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>执要 Agent 黑白方案对比</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 36px;
+      }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: #9a9a9a; font-size: 13px; margin-bottom: 30px; }
+      .grid { display: flex; gap: 24px; flex-wrap: wrap; }
+      .concept {
+        background: #242424;
+        border: 1px solid #3a3a3a;
+        border-radius: 14px;
+        padding: 20px;
+        width: 360px;
+      }
+      .concept h2 { margin: 0 0 2px; font-size: 16px; }
+      .concept .desc { color: #9a9a9a; font-size: 12px; margin-bottom: 14px; min-height: 32px; }
+      .showcase { display: flex; align-items: center; gap: 14px; }
+      .tile-w { background: #fff; border-radius: 18%; padding: 6px; width: 96px; height: 96px; display: grid; place-items: center; }
+      .tile-b { background: #111; border-radius: 18%; padding: 6px; width: 96px; height: 96px; display: grid; place-items: center; }
+      .small-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+      .small-row img { background: #fff; border-radius: 18%; }
+      .small-row .dark img { background: #111; }
+      .note { font-size: 11px; color: #777; margin-top: 10px; }
+      .wm { margin-top: 30px; background: #fff; border-radius: 12px; padding: 16px 20px; display: inline-block; }
+    </style>
+  </head>
+  <body>
+    <h1>执要 Agent · 纯黑白方案</h1>
+    <div class="sub">圣人执要，四方来效 —— 参考 ChatGPT 扩展的黑白极简风格</div>
+    <div class="grid">
+      <div class="concept">
+        <h2>方案 A · 涟漪同心</h2>
+        <div class="desc">执要一点，四方回应：中心实点 + 双环，外环断为四段弧（四方）</div>
+        <div class="showcase">
+          <div class="tile-w"><img src="./logo-A.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-A.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-A.svg" width="16" height="16" />
+          <img src="./logo-A.svg" width="32" height="32" />
+          <img src="./logo-A.svg" width="48" height="48" />
+        </div>
+        <div class="note">小尺寸 = 同心圆靶，风险：像 Wi-Fi / 靶心</div>
+      </div>
+      <div class="concept">
+        <h2>方案 B · 四方归心</h2>
+        <div class="desc">四方来效，汇聚核心：四枚向心箭头 + 中心实点</div>
+        <div class="showcase">
+          <div class="tile-w"><img src="./logo-B.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-B.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-B.svg" width="16" height="16" />
+          <img src="./logo-B.svg" width="32" height="32" />
+          <img src="./logo-B.svg" width="48" height="48" />
+        </div>
+        <div class="note">小尺寸 = 星芒，最直白；风险：像对焦框</div>
+      </div>
+      <div class="concept">
+        <h2>方案 C · 回中一点（推荐）</h2>
+        <div class="desc">「回」即四方回旋来效，一点即执要之核；形如印章，东方气质</div>
+        <div class="showcase">
+          <div class="tile-w"><img src="./logo-C.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-C.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-C.svg" width="16" height="16" />
+          <img src="./logo-C.svg" width="32" height="32" />
+          <img src="./logo-C.svg" width="48" height="48" />
+        </div>
+        <div class="note">小尺寸 = 方中套方一点，辨识度最高，最不像常见图标</div>
+      </div>
+    </div>
+    <div class="wm"><img src="./logo-wordmark.svg" width="300" /></div>
+  </body>
+</html>

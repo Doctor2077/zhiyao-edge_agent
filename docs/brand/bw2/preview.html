@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>执要 Agent 黑白方案 v2</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background: #1a1a1a;
+        color: #fff;
+        padding: 36px;
+      }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: #9a9a9a; font-size: 13px; margin-bottom: 30px; }
+      .grid { display: flex; gap: 24px; flex-wrap: wrap; }
+      .concept {
+        background: #242424;
+        border: 1px solid #3a3a3a;
+        border-radius: 14px;
+        padding: 20px;
+        width: 380px;
+      }
+      .concept h2 { margin: 0 0 2px; font-size: 16px; }
+      .concept .story { color: #cfcfcf; font-size: 12.5px; margin-bottom: 4px; }
+      .concept .desc { color: #9a9a9a; font-size: 12px; margin-bottom: 14px; min-height: 34px; }
+      .showcase { display: flex; align-items: center; gap: 14px; }
+      .tile-w {
+        background: #fff;
+        border-radius: 18%;
+        padding: 6px;
+        width: 96px;
+        height: 96px;
+        display: grid;
+        place-items: center;
+      }
+      .tile-b {
+        background: #111;
+        border-radius: 18%;
+        padding: 6px;
+        width: 96px;
+        height: 96px;
+        display: grid;
+        place-items: center;
+      }
+      .small-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+      .small-row img { background: #fff; border-radius: 18%; }
+      .note { font-size: 11px; color: #777; margin-top: 10px; }
+      .rec { display: inline-block; background: #fff; color: #000; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-left: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>执要 Agent · 纯黑白方案 v2</h1>
+    <div class="sub">设计原则：简洁 / 可缩放 / 黑白成立 / 不撞常见图标 / 有意义（四方来效）</div>
+    <div class="grid">
+      <div class="concept">
+        <h2>方案 D · 合符<span class="rec">推荐</span></h2>
+        <div class="story">虎符一剖为二，合符则四方来效</div>
+        <div class="desc">圣人执要之信物：一半白一半黑，锯齿相合为一印。持符者令出，四方见符而效</div>
+        <div class="showcase">
+          <div class="tile-w"><img src="./logo-D.svg" width="84" height="84" /></div>
+          <div class="tile-b"><img src="./logo-D.svg" width="84" height="84" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-D.svg" width="16" height="16" />
+          <img src="./logo-D.svg" width="32" height="32" />
+          <img src="./logo-D.svg" width="48" height="48" />
+        </div>
+        <div class="note">16px = 半黑半白的方印，剪影独一无二</div>
+      </div>
+      <div class="concept">
+        <h2>方案 E · 司南</h2>
+        <div class="story">执一以定四方</div>
+        <div class="desc">磁针指一，四方来效：环 + 针 + 针眼。圣人定方向，AI 循向而行</div>
+        <div class="showcase">
+          <div class="tile-w"><img src="./logo-E.svg" width="84" height="84" /></div>
+          <div class="tile-b"><img src="./logo-E.svg" width="84" height="84" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-E.svg" width="16" height="16" />
+          <img src="./logo-E.svg" width="32" height="32" />
+          <img src="./logo-E.svg" width="48" height="48" />
+        </div>
+        <div class="note">16px = 环中一针；风险：像指南针</div>
+      </div>
+      <div class="concept">
+        <h2>方案 F · 圆规</h2>
+        <div class="story">执规矩以正四方</div>
+        <div class="desc">定圆心（执要），画圆周（来效）：规的两足 + 铰点 + 足弧 + 圆心一点</div>
+        <div class="showcase">
+          <div class="tile-w"><img src="./logo-F.svg" width="84" height="84" /></div>
+          <div class="tile-b"><img src="./logo-F.svg" width="84" height="84" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-F.svg" width="16" height="16" />
+          <img src="./logo-F.svg" width="32" height="32" />
+          <img src="./logo-F.svg" width="48" height="48" />
+        </div>
+        <div class="note">16px = A 形 + 点；风险：像字母 A / 圆规工具</div>
+      </div>
+    </div>
+  </body>
+</html>

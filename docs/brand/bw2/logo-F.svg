@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- 方案 F：圆规 —— 执规矩以正四方：定圆心（执要），画圆周（来效） -->
+  <g fill="none" stroke="#000000" stroke-width="10" stroke-linecap="round">
+    <path d="M 64 20 L 42 92"/>
+    <path d="M 64 20 L 86 92"/>
+    <path d="M 42 100 Q 64 114 86 100"/>
+  </g>
+  <!-- 规轴（铰点） -->
+  <circle cx="64" cy="20" r="8" fill="#000000"/>
+  <!-- 圆心：执要之核 -->
+  <circle cx="64" cy="62" r="6" fill="#000000"/>
+</svg>

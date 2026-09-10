@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- V5 羽扇执要：诸葛亮羽扇，扇轴一点为「要」；执扇于轴，风动四方 -->
+  <path d="M 36 40 Q 36 18 64 18 Q 92 18 92 40 L 92 54 Q 64 70 36 54 Z" fill="#000000"/>
+  <rect x="60" y="58" width="8" height="30" rx="4" fill="#000000"/>
+  <circle cx="64" cy="50" r="6" fill="#FFFFFF"/>
+</svg>

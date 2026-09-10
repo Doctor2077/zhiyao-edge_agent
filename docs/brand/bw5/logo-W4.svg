@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- W4 太公垂钓：姜太公直钩钓鱼——愿者上钩，四方来效 -->
+  <g fill="none" stroke="#000000" stroke-linecap="round">
+    <path d="M 20 10 L 74 72" stroke-width="10"/>
+    <path d="M 74 72 Q 80 94 72 114" stroke-width="5"/>
+  </g>
+  <path d="M 30 118 Q 64 125 98 118" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M 44 108 Q 64 113 84 108" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

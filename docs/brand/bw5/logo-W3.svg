@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- W3 天元落子：棋盘中心点曰「天元」，执子落天元——圣人执要，一子定乾坤 -->
+  <g fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round">
+    <path d="M 64 14 L 64 114"/>
+    <path d="M 14 64 L 114 64"/>
+  </g>
+  <circle cx="64" cy="64" r="24" fill="#000000"/>
+</svg>

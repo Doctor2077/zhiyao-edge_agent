@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>执要 Agent 品牌预览</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background: #0e0e16;
+        color: #eceaf6;
+        padding: 40px;
+      }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: #8d89ab; font-size: 13px; margin-bottom: 28px; }
+      .row { display: flex; gap: 28px; align-items: center; margin-bottom: 32px; flex-wrap: wrap; }
+      .card {
+        background: #171722;
+        border: 1px solid rgba(236, 234, 246, 0.09);
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+      }
+      .card.light { background: #f5f5fa; color: #1c1930; border-color: rgba(28, 25, 48, 0.09); }
+      .card .label { font-size: 11px; color: #8d89ab; margin-top: 10px; }
+      .sizes { display: flex; gap: 14px; align-items: flex-end; }
+      .sizes img { border-radius: 20%; }
+    </style>
+  </head>
+  <body>
+    <h1>执要 Agent · 品牌标识</h1>
+    <div class="sub">圣人执要，四方来效 —— 四条轨迹汇聚于核心之「要」</div>
+    <div class="row">
+      <div class="card">
+        <img src="./logo-app-300.png" width="128" height="128" style="border-radius: 22%" />
+        <div class="label">应用图标（印章版）</div>
+      </div>
+      <div class="card light">
+        <img src="./logo-app-300.png" width="128" height="128" style="border-radius: 22%" />
+        <div class="label">浅色背景适配</div>
+      </div>
+      <div class="card">
+        <img src="./logo-mark.svg" width="96" height="96" />
+        <div class="label">纯图形标记（透明底）</div>
+      </div>
+      <div class="card">
+        <img src="./logo-wordmark.svg" width="300" />
+        <div class="label">横版字标</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="card">
+        <div class="sizes">
+          <img src="../extension/public/icon/16.png" width="16" height="16" />
+          <img src="../extension/public/icon/32.png" width="32" height="32" />
+          <img src="../extension/public/icon/48.png" width="48" height="48" />
+          <img src="../extension/public/icon/96.png" width="96" height="96" />
+          <img src="../extension/public/icon/128.png" width="128" height="128" />
+        </div>
+        <div class="label">manifest 图标 16 / 32 / 48 / 96 / 128</div>
+      </div>
+    </div>
+  </body>
+</html>

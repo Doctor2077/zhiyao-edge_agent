@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- W2 北辰众星：《论语》为政以德，譬如北辰，居其所而众星共之 -->
+  <circle cx="64" cy="46" r="13" fill="#000000"/>
+  <path d="M 28 76 Q 64 102 100 76" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="28" cy="76" r="7" fill="#000000"/>
+  <circle cx="44" cy="90" r="8.5" fill="#000000"/>
+  <circle cx="84" cy="90" r="8.5" fill="#000000"/>
+  <circle cx="100" cy="76" r="7" fill="#000000"/>
+</svg>

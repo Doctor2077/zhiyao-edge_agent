@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>合符变体对比</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background: #1a1a1a;
+        color: #fff;
+        padding: 36px;
+      }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: #9a9a9a; font-size: 13px; margin-bottom: 30px; }
+      .grid { display: flex; gap: 20px; flex-wrap: wrap; }
+      .concept {
+        background: #242424;
+        border: 1px solid #3a3a3a;
+        border-radius: 14px;
+        padding: 18px;
+        width: 300px;
+      }
+      .concept h2 { margin: 0; font-size: 15px; }
+      .concept .desc { color: #9a9a9a; font-size: 12px; margin: 4px 0 12px; min-height: 30px; }
+      .row { display: flex; align-items: center; gap: 12px; }
+      .tile-w { background: #fff; border-radius: 18%; padding: 5px; width: 92px; height: 92px; display: grid; place-items: center; }
+      .tile-b { background: #111; border-radius: 18%; padding: 5px; width: 92px; height: 92px; display: grid; place-items: center; }
+      .small-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+      .small-row img { background: #fff; border-radius: 18%; }
+      .rec { display: inline-block; background: #fff; color: #000; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-left: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>合符 · 四版变体</h1>
+    <div class="sub">框架不变：方印 + 半白半黑 + 锯齿相合；每版加一个记忆点</div>
+    <div class="grid">
+      <div class="concept">
+        <h2>D1 · 点睛</h2>
+        <div class="desc">两半各一点：白半黑点、黑半白点。阴阳互见，像符节上的「符眼」</div>
+        <div class="row">
+          <div class="tile-w"><img src="./logo-D1.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-D1.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-D1.svg" width="16" height="16" />
+          <img src="./logo-D1.svg" width="32" height="32" />
+          <img src="./logo-D1.svg" width="48" height="48" />
+        </div>
+      </div>
+      <div class="concept">
+        <h2>D2 · 深齿</h2>
+        <div class="desc">三道深锯齿，咬合感更强，剪影更锐利更有攻击性</div>
+        <div class="row">
+          <div class="tile-w"><img src="./logo-D2.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-D2.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-D2.svg" width="16" height="16" />
+          <img src="./logo-D2.svg" width="32" height="32" />
+          <img src="./logo-D2.svg" width="48" height="48" />
+        </div>
+      </div>
+      <div class="concept">
+        <h2>D3 · 中核<span class="rec">推荐</span></h2>
+        <div class="desc">合缝处一颗菱形核心（执要之核），横跨黑白两域——负空间钩子，第一眼就有焦点</div>
+        <div class="row">
+          <div class="tile-w"><img src="./logo-D3.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-D3.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-D3.svg" width="16" height="16" />
+          <img src="./logo-D3.svg" width="32" height="32" />
+          <img src="./logo-D3.svg" width="48" height="48" />
+        </div>
+      </div>
+      <div class="concept">
+        <h2>D4 · 方孔</h2>
+        <div class="desc">黑半一方孔——符节穿绳之孔，一枚印章挂起来。意外细节制造记忆</div>
+        <div class="row">
+          <div class="tile-w"><img src="./logo-D4.svg" width="80" height="80" /></div>
+          <div class="tile-b"><img src="./logo-D4.svg" width="80" height="80" style="filter: invert(1)" /></div>
+        </div>
+        <div class="small-row">
+          <img src="./logo-D4.svg" width="16" height="16" />
+          <img src="./logo-D4.svg" width="32" height="32" />
+          <img src="./logo-D4.svg" width="48" height="48" />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "zhiyao-agent",
+  "description": "ZhiYao Agent (执要 Agent) - Edge sidebar AI assistant (BYOK). The sage holds the essential, all directions serve.",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "wxt -b edge",
+    "build": "wxt build -b edge",
+    "zip": "wxt zip -b edge",
+    "compile": "tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@wxt-dev/module-react": "^1.2.2",
+    "typescript": "^5.7.2",
+    "wxt": "^0.21.4"
+  }
+}

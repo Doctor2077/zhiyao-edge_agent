@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- 方案 D 图标版：白底黑标（ChatGPT 同款惯例） -->
+  <rect width="128" height="128" rx="28" fill="#FFFFFF"/>
+  <g transform="translate(64 64) scale(0.7) translate(-64 -64)">
+    <defs>
+      <clipPath id="sealDi">
+        <rect x="14" y="14" width="100" height="100" rx="16"/>
+      </clipPath>
+    </defs>
+    <g clip-path="url(#sealDi)">
+      <path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122 L 128 122 L 128 6 Z" fill="#000000"/>
+    </g>
+    <rect x="14" y="14" width="100" height="100" rx="16" fill="none" stroke="#000000" stroke-width="8"/>
+    <path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122" fill="none" stroke="#000000" stroke-width="8"/>
+  </g>
+</svg>

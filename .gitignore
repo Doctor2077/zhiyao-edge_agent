@@ -1,0 +1,16 @@
+# 依赖与产物
+node_modules/
+.output/
+.wxt/
+stats.html
+
+# 个人工作记忆（不公开）
+.ai-memory/
+
+# 打包产物
+*.zip
+*.crx
+
+# 系统文件
+.DS_Store
+Thumbs.db

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- D1 图标版：白底黑标 -->
+  <rect width="128" height="128" rx="28" fill="#FFFFFF"/>
+  <g transform="translate(64 64) scale(0.7) translate(-64 -64)">
+    <defs>
+      <clipPath id="d1ic">
+        <rect x="14" y="14" width="100" height="100" rx="16"/>
+      </clipPath>
+    </defs>
+    <g clip-path="url(#d1ic)">
+      <path fill-rule="evenodd" fill="#000000" d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122 L 128 122 L 128 6 Z M 88 88 m -6 0 a 6 6 0 1 0 12 0 a 6 6 0 1 0 -12 0 Z"/>
+      <circle cx="40" cy="40" r="6" fill="#000000"/>
+    </g>
+    <rect x="14" y="14" width="100" height="100" rx="16" fill="none" stroke="#000000" stroke-width="8"/>
+    <path d="M 64 6 L 54 38 L 74 54 L 54 70 L 74 86 L 64 122" fill="none" stroke="#000000" stroke-width="8"/>
+  </g>
+</svg>

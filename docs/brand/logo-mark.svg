@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="zg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6C63FF"/>
+      <stop offset="1" stop-color="#3ECFCF"/>
+    </linearGradient>
+  </defs>
+  <!-- 四向笔触：四方来效，汇聚于核心 -->
+  <g stroke="url(#zg)" stroke-width="20" stroke-linecap="round">
+    <line x1="38" y1="38" x2="57" y2="57"/>
+    <line x1="90" y1="38" x2="71" y2="57"/>
+    <line x1="38" y1="90" x2="57" y2="71"/>
+    <line x1="90" y1="90" x2="71" y2="71"/>
+  </g>
+  <!-- 核心「要」：渐变环 + 白心 -->
+  <circle cx="64" cy="64" r="14" fill="url(#zg)"/>
+  <circle cx="64" cy="64" r="5.5" fill="#FFFFFF"/>
+</svg>
