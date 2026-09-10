@@ -69,7 +69,7 @@
   "confirmAction": { "message": "确认执行" },
   "actionResult": { "message": "操作结果" },
   "actionCancelled": { "message": "已取消操作。" },
-  "agentMaxSteps": { "message": "已达到最大操作步数（10 步），已停止。请继续描述下一步。" },
+  "agentMaxSteps": { "message": "已达到最大操作步数（{n} 步），已停止。请继续描述下一步。" },
   "toolInvalidRetry": { "message": "（模型返回的操作不完整，已让它重试）" },
   "snapshotDone": { "message": "已读取页面交互元素（{n} 个）" },
   "riskLow": { "message": "低风险" },

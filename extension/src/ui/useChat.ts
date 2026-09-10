@@ -36,6 +36,8 @@ import { t, uiLang } from './i18n';
 import { useSettings } from './SettingsContext';
 
 const MAX_STEPS = 10;
+/** 去广告任务步数上限：清理动作多，放宽到 50（停止按钮兜底） */
+const MAX_STEPS_AD_REMOVAL = 50;
 
 /** 内部只读工具：自动执行、不消耗步数上限（避免长文翻译的批次被 10 步打断） */
 const INTERNAL_TOOLS = new Set(['snapshot', 'page_source', 'get_texts', 'get_media']);
@@ -464,6 +466,11 @@ export function useChat(): UseChatResult {
           ]
         : enabledSkills;
 
+      // 去广告任务放宽步数上限：清理动作多，10 步不够用
+      const stepLimit = allSkills.some((s) => s.id === 'remove-ads')
+        ? MAX_STEPS_AD_REMOVAL
+        : MAX_STEPS;
+
       const modelMsgs: ModelMessage[] = buildMessages({
         page: ctx,
         history,
@@ -711,7 +718,7 @@ export function useChat(): UseChatResult {
         let steps = 0;
         let stopped = false;
 
-        while (steps < MAX_STEPS && !stopped) {
+        while (steps < stepLimit && !stopped) {
           steps++;
 
           if (useDemo) {
@@ -793,8 +800,8 @@ export function useChat(): UseChatResult {
           stopped = true;
         }
 
-        if (steps >= MAX_STEPS && !finalText && !stopped) {
-          setLastAssistant(t('agentMaxSteps'));
+        if (steps >= stepLimit && !finalText && !stopped) {
+          setLastAssistant(t('agentMaxSteps', { n: stepLimit }));
         }
         if (finalText) {
           const out = estimateTokens(finalText);
