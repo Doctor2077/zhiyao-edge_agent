@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" data-scene="article">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why Reading the Web Still Feels Broken — The Margin</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --muted: #666666;
+    --line: #e7e7e7;
+    --paper: #ffffff;
+    --accent: #0f5c4a;
+    --soft: #f6f8f7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  .site-nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 1120px; margin: 0 auto; height: 58px;
+    display: flex; align-items: center; gap: 26px; padding: 0 28px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .brand {
+    font-weight: 700; font-size: 17px; color: var(--accent);
+    letter-spacing: -0.01em; white-space: nowrap;
+  }
+  .nav-links {
+    display: flex; gap: 20px; font-size: 14px; color: var(--muted);
+  }
+  .nav-links span { cursor: default; }
+  .nav-search {
+    margin-left: auto; color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-search svg { display: block; }
+
+  .page { max-width: 720px; margin: 0 auto; padding: 54px 24px 72px; }
+
+  article h1 {
+    font-size: 40px; line-height: 1.18; letter-spacing: -0.02em;
+    margin: 0 0 14px; font-weight: 700;
+  }
+  .deck {
+    font-size: 20px; line-height: 1.55; color: var(--muted);
+    margin: 0 0 28px;
+  }
+  .byline {
+    display: flex; align-items: center; gap: 13px;
+    padding: 0 0 24px; border-bottom: 1px solid var(--line);
+  }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, #0f5c4a, #4ba896);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: 0.02em;
+    flex: none;
+  }
+  .byline-meta { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .byline-meta .name { font-size: 15px; font-weight: 700; }
+  .byline-meta .meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .byline-actions {
+    margin-left: auto; display: flex; gap: 10px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px; color: var(--muted);
+  }
+  .byline-actions span {
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px;
+    white-space: nowrap;
+  }
+
+  article p { margin: 0 0 1.45em; }
+  article h2 {
+    font-size: 26px; line-height: 1.3; font-weight: 700;
+    margin: 2.1em 0 0.7em; letter-spacing: -0.01em;
+  }
+  article blockquote {
+    margin: 1.8em 0; padding: 6px 0 6px 24px;
+    border-left: 3px solid var(--accent);
+    color: #3b3b3b; font-style: italic;
+    font-size: 21px; line-height: 1.6;
+  }
+  article ul, article ol { margin: 0 0 1.5em; padding-left: 26px; }
+  article li { margin-bottom: 0.5em; }
+  article pre {
+    background: var(--soft); border: 1px solid #e3e8e6; border-radius: 8px;
+    padding: 18px 20px; overflow-x: auto; margin: 1.8em 0;
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 14px; line-height: 1.55; color: #26322e;
+  }
+  article code {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.88em;
+  }
+
+  .figure-card {
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px 24px 18px; margin: 2em 0;
+  }
+  .figure-card h3 {
+    margin: 0 0 16px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px; font-weight: 700;
+  }
+  .bar-row {
+    display: grid; grid-template-columns: 88px 1fr 44px; align-items: center; gap: 10px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px; color: var(--muted); margin-bottom: 9px;
+  }
+  .bar-track { background: #eef1f0; height: 10px; border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+  .bar-fill.dim { background: #9fc2b8; }
+  .figure-caption {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px; color: var(--muted); margin-top: 14px;
+  }
+
+  .comments {
+    max-width: 720px; margin: 0 auto; padding: 8px 24px 84px;
+  }
+  .comments-title {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px; font-weight: 700; margin: 0 0 22px;
+    padding-top: 26px; border-top: 1px solid var(--line);
+  }
+  .comment { display: flex; gap: 12px; margin-bottom: 24px; }
+  .comment .avatar { width: 38px; height: 38px; font-size: 13px; }
+  .comment-body { flex: 1; min-width: 0; }
+  .comment-head {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px; color: var(--muted); margin-bottom: 5px;
+  }
+  .comment-head strong { color: var(--ink); font-size: 14px; }
+  .comment-body p { font-size: 16px; line-height: 1.65; margin: 0; }
+</style>
+</head>
+<body>
+  <header class="site-nav">
+    <div class="nav-inner">
+      <div class="brand">The Margin</div>
+      <nav class="nav-links">
+        <span>Technology</span>
+        <span>Design</span>
+        <span>Culture</span>
+        <span>About</span>
+      </nav>
+      <div class="nav-search" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="20.5" y1="20.5" x2="16.2" y2="16.2"></line>
+        </svg>
+        <span>Search</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <article id="article-body">
+      <h1>Why Reading the Web Still Feels Broken</h1>
+      <p class="deck">The web has never had more good writing. It has also never been this hard to finish a single page.</p>
+
+      <div class="byline">
+        <div class="avatar">MJ</div>
+        <div class="byline-meta">
+          <div class="name">Maya Jensen</div>
+          <div class="meta">March 12, 2025 &nbsp;·&nbsp; 9 min read</div>
+        </div>
+        <div class="byline-actions">
+          <span>Follow</span>
+          <span>Share</span>
+        </div>
+      </div>
+
+      <p>Every few years someone publishes a manifesto about how the web used to be readable. The essays follow a familiar shape: a memory of blogs in 2007, a clean archive, a sigh about what happened next. I opened one last week in a browser with thirty-seven tabs open, and the page still interrupted me before I reached the second paragraph. A cookie dialog wanted my preferences. A newsletter box slid up from the bottom. A video started playing below the fold. None of this is new. We have learned to call it normal.</p>
+
+      <p>Readability used to be a technical property. We measured line length, contrast, font size, the space between letters. Those details still matter. But the feeling of a page being readable comes from something else now: whether the page lets you stay inside one idea for more than twenty seconds. By that measure, most pages are not very readable. They are assembled from competing layers, the article, the ad slots, the recommendations, the subscription reminder, the floating button, the consent manager, the live chat widget that wants to say hello.</p>
+
+      <p>Some of this is economics. Publishing costs money. Ads pay some of it. Subscriptions pay some. The rest is paid in attention, which is a polite way of saying the business model wants you to stay on the page long enough for another impression. I am not against advertising. I am against the moment when an article becomes scenery around an ad instead of the reason the page exists.</p>
+
+      <h2>A short history of the pop-up</h2>
+
+      <p>The first pop-up window appeared in the mid-1990s, and even its inventor spent later years apologizing for it. Browsers added blockers, so sites moved on. They opened new tabs in the background. They turned ads into content grids that look like more articles. They invented the interstitial, the takeover, the exit intent. Each new format promised to be less annoying than the last, and each one was mostly a way around whatever the user had just learned to ignore.</p>
+
+      <h2>The real cost is not time</h2>
+
+      <p>When people complain about the modern web, the usual metric is minutes wasted. That number is real, but the deeper cost shows up after the interruption ends. Reading is a state, not a rate. You do not simply lose the fifteen seconds the pop-up held your eyes. You lose the thread you were holding, the sentence you were halfway through, the small amount of mental warmth that made the idea feel like it belonged to you. Starting again is not free. Do it ten times in one essay and the essay becomes a series of recoveries.</p>
+
+      <p>This is why long-form content now feels longer than it is. It is not the word count. It is the number of times the page forces you to re-enter the text. A two-thousand-word essay with one interruption can feel quick. The same essay with nine interruptions feels like work. Readers are responding to the shape of the experience, not the length.</p>
+
+      <h2>What a calm reading surface actually requires</h2>
+
+      <p>Calm is not the absence of design. It is a set of small promises the page keeps. The first is that the text is the highest object in the hierarchy. Headings behave like headings, body text like body text, and nothing that wants money or an email address is allowed to stand on top of them. The second is that motion is earned. If something moves, it moves because the reader did something, not because a timer fired. The third is that the page has an ending, and it does not immediately hand you another page to read.</p>
+
+      <blockquote>The best reading interface is the one you stop noticing after the first paragraph. Its only job is to stay out of the way of the sentence.</blockquote>
+
+      <p>That line sounds obvious, which is exactly why it is hard. Staying out of the way requires discipline. Every widget, share bar, and related-post module is a small argument that the reader cannot be trusted to know what to do next. The calm page disagrees. It trusts the reader to scroll, to finish, to close the tab, to come back.</p>
+
+      <h2>The browser tab is not a library</h2>
+
+      <p>We also make the web noisier ourselves. I keep tabs open as a form of memory. The tab is a bookmark, a to-do item, a half-finished thought. The browser becomes a pile of intentions, and each tab is another voice that might refresh, animate, or notify. Some of that is the page's fault, and some is mine. A tool that shows one page at a time can help. It does not fix the pile, but it changes the terms.</p>
+
+      <p>A side panel that summarizes a long piece, or answers a question about it, sounds like a small feature. It becomes useful because it sits beside the text instead of replacing it. I can keep the page in front of me and ask what a confusing paragraph meant, or have it pull the claims out of a forty-minute argument. The page stays. The reading does not get pushed into a chatbot-shaped funnel. It gets a helper that respects the layout I already chose.</p>
+
+      <h2>The web does not need to feel like a casino</h2>
+
+      <p>None of this requires a radical invention. We know what a readable page looks like: a few typefaces, generous whitespace, one column, restrained color, a visible title, a real byline. The pattern has survived because it works. What breaks it is not technology. It is the decision to treat the reader's attention as a resource that can be extracted until the page closes.</p>
+
+      <p>I keep coming back to a simple test. When I finish a piece, do I remember the argument, or do I remember the ads I dodged? Lately, too often, the ads are what stick. That seems backwards. The article did the difficult work of being interesting. The ads merely got in the way. If a reader leaves a page with a sharper memory of the interruption than the idea, the page has failed at the one job that justified it.</p>
+
+      <h2>Small fixes, then bigger ones</h2>
+
+      <p>Some fixes are easy. Publishers can delay the newsletter pop-up until a reader has actually scrolled through most of the piece. They can let the consent dialog remember its answer. They can test a page with one ad format instead of seven. These changes do not solve the business model, but they change the texture of the experience, and texture is what people feel.</p>
+
+      <p>The harder fix is more honest accounting. If the product is the reader's attention, say so, and design for it carefully. If the product is the writing, protect the writing. A page cannot do both at full volume forever. One of them eventually becomes the wrapper for the other.</p>
+
+      <h2>A calmer reading stack, in practice</h2>
+
+      <ul>
+        <li>Read in a single tab, with notifications off, for the length of one article.</li>
+        <li>Move the read-later queue out of the browser. The tab bar should hold only what you are doing now.</li>
+        <li>Block autoplay by default. It is a reader's setting, not a concession.</li>
+        <li>When a page fights you, switch to reader mode or copy the text somewhere quiet.</li>
+      </ul>
+
+      <ol>
+        <li>Open the article in a quiet window.</li>
+        <li>Let the page finish loading, then turn on the side panel or reader view.</li>
+        <li>Read the whole thing before deciding what to save.</li>
+        <li>Close the tab when you are done.</li>
+      </ol>
+
+      <pre><code>const quiet = () => {
+  document.querySelectorAll(".ad, .modal, .newsletter, .share-bar")
+    .forEach((el) => el.remove());
+  document.body.classList.add("reader-mode");
+};</code></pre>
+
+      <figure class="figure-card">
+        <h3>One article, measured by page area</h3>
+        <div class="bar-row"><span>Words</span><div class="bar-track"><div class="bar-fill" style="width:62%"></div></div><span>62%</span></div>
+        <div class="bar-row"><span>Ads</span><div class="bar-track"><div class="bar-fill dim" style="width:19%"></div></div><span>19%</span></div>
+        <div class="bar-row"><span>Navigation</span><div class="bar-track"><div class="bar-fill dim" style="width:11%"></div></div><span>11%</span></div>
+        <div class="bar-row"><span>Prompts</span><div class="bar-track"><div class="bar-fill dim" style="width:8%"></div></div><span>8%</span></div>
+        <figcaption class="figure-caption">A generous estimate, based on a recent Tuesday.</figcaption>
+      </figure>
+
+      <p>The web is still a remarkable place to read. Long essays, patient reporting, careful tutorials, strange personal sites: they are all still out there, and easier to publish than ever. The problem is not a shortage of good writing. It is that the writing keeps getting buried under the furniture of the page. The fix is not to abandon the browser or declare the web dead. It is to choose surfaces that give a sentence room to do its work. When that happens, reading just feels like reading.</p>
+    </article>
+  </main>
+
+  <section class="comments" aria-label="Comments">
+    <h2 class="comments-title">3 responses</h2>
+    <div class="comment">
+      <div class="avatar">DK</div>
+      <div class="comment-body">
+        <div class="comment-head"><strong>Dana Kim</strong> · March 12, 2025</div>
+        <p>The tab-as-memory point hit close to home. I counted forty-one tabs while reading this, and exactly four of them were doing anything useful.</p>
+      </div>
+    </div>
+    <div class="comment">
+      <div class="avatar">RO</div>
+      <div class="comment-body">
+        <div class="comment-head"><strong>Rafael Ortiz</strong> · March 13, 2025</div>
+        <p>I keep wanting a reader that works beside the page instead of boiling everything down to a summary I never asked for. This is the first time that trade-off made sense to me.</p>
+      </div>
+    </div>
+    <div class="comment">
+      <div class="avatar">LP</div>
+      <div class="comment-body">
+        <div class="comment-head"><strong>Lin Peng</strong> · March 13, 2025</div>
+        <p>Newsletter boxes are the worst. I have been subscribed for years by accident because the close button moved between page load and page load.</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

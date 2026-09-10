@@ -1,0 +1,236 @@
+[
+ {
+  "i": 0,
+  "tag": "h1",
+  "text": "Why Reading the Web Still Feels Broken",
+  "selector": "#article-body > h1"
+ },
+ {
+  "i": 1,
+  "tag": "p",
+  "text": "The web has never had more good writing. It has also never been this hard to finish a single page.",
+  "selector": "#article-body > p:nth-of-type(1)"
+ },
+ {
+  "i": 2,
+  "tag": "p",
+  "text": "Every few years someone publishes a manifesto about how the web used to be readable. The essays follow a familiar shape: a memory of blogs in 2007, a clean archive, a sigh about what happened next. I opened one last week in a browser with thirty-seven tabs open, and the page still interrupted me bef",
+  "selector": "#article-body > p:nth-of-type(2)"
+ },
+ {
+  "i": 3,
+  "tag": "p",
+  "text": "Readability used to be a technical property. We measured line length, contrast, font size, the space between letters. Those details still matter. But the feeling of a page being readable comes from something else now: whether the page lets you stay inside one idea for more than twenty seconds. By th",
+  "selector": "#article-body > p:nth-of-type(3)"
+ },
+ {
+  "i": 4,
+  "tag": "p",
+  "text": "Some of this is economics. Publishing costs money. Ads pay some of it. Subscriptions pay some. The rest is paid in attention, which is a polite way of saying the business model wants you to stay on the page long enough for another impression. I am not against advertising. I am against the moment whe",
+  "selector": "#article-body > p:nth-of-type(4)"
+ },
+ {
+  "i": 5,
+  "tag": "h2",
+  "text": "A short history of the pop-up",
+  "selector": "#article-body > h2:nth-of-type(1)"
+ },
+ {
+  "i": 6,
+  "tag": "p",
+  "text": "The first pop-up window appeared in the mid-1990s, and even its inventor spent later years apologizing for it. Browsers added blockers, so sites moved on. They opened new tabs in the background. They turned ads into content grids that look like more articles. They invented the interstitial, the take",
+  "selector": "#article-body > p:nth-of-type(5)"
+ },
+ {
+  "i": 7,
+  "tag": "h2",
+  "text": "The real cost is not time",
+  "selector": "#article-body > h2:nth-of-type(2)"
+ },
+ {
+  "i": 8,
+  "tag": "p",
+  "text": "When people complain about the modern web, the usual metric is minutes wasted. That number is real, but the deeper cost shows up after the interruption ends. Reading is a state, not a rate. You do not simply lose the fifteen seconds the pop-up held your eyes. You lose the thread you were holding, th",
+  "selector": "#article-body > p:nth-of-type(6)"
+ },
+ {
+  "i": 9,
+  "tag": "p",
+  "text": "This is why long-form content now feels longer than it is. It is not the word count. It is the number of times the page forces you to re-enter the text. A two-thousand-word essay with one interruption can feel quick. The same essay with nine interruptions feels like work. Readers are responding to t",
+  "selector": "#article-body > p:nth-of-type(7)"
+ },
+ {
+  "i": 10,
+  "tag": "h2",
+  "text": "What a calm reading surface actually requires",
+  "selector": "#article-body > h2:nth-of-type(3)"
+ },
+ {
+  "i": 11,
+  "tag": "p",
+  "text": "Calm is not the absence of design. It is a set of small promises the page keeps. The first is that the text is the highest object in the hierarchy. Headings behave like headings, body text like body text, and nothing that wants money or an email address is allowed to stand on top of them. The second",
+  "selector": "#article-body > p:nth-of-type(8)"
+ },
+ {
+  "i": 12,
+  "tag": "blockquote",
+  "text": "The best reading interface is the one you stop noticing after the first paragraph. Its only job is to stay out of the way of the sentence.",
+  "selector": "#article-body > blockquote"
+ },
+ {
+  "i": 13,
+  "tag": "p",
+  "text": "That line sounds obvious, which is exactly why it is hard. Staying out of the way requires discipline. Every widget, share bar, and related-post module is a small argument that the reader cannot be trusted to know what to do next. The calm page disagrees. It trusts the reader to scroll, to finish, t",
+  "selector": "#article-body > p:nth-of-type(9)"
+ },
+ {
+  "i": 14,
+  "tag": "h2",
+  "text": "The browser tab is not a library",
+  "selector": "#article-body > h2:nth-of-type(4)"
+ },
+ {
+  "i": 15,
+  "tag": "p",
+  "text": "We also make the web noisier ourselves. I keep tabs open as a form of memory. The tab is a bookmark, a to-do item, a half-finished thought. The browser becomes a pile of intentions, and each tab is another voice that might refresh, animate, or notify. Some of that is the page's fault, and some is mi",
+  "selector": "#article-body > p:nth-of-type(10)"
+ },
+ {
+  "i": 16,
+  "tag": "p",
+  "text": "A side panel that summarizes a long piece, or answers a question about it, sounds like a small feature. It becomes useful because it sits beside the text instead of replacing it. I can keep the page in front of me and ask what a confusing paragraph meant, or have it pull the claims out of a forty-mi",
+  "selector": "#article-body > p:nth-of-type(11)"
+ },
+ {
+  "i": 17,
+  "tag": "h2",
+  "text": "The web does not need to feel like a casino",
+  "selector": "#article-body > h2:nth-of-type(5)"
+ },
+ {
+  "i": 18,
+  "tag": "p",
+  "text": "None of this requires a radical invention. We know what a readable page looks like: a few typefaces, generous whitespace, one column, restrained color, a visible title, a real byline. The pattern has survived because it works. What breaks it is not technology. It is the decision to treat the reader'",
+  "selector": "#article-body > p:nth-of-type(12)"
+ },
+ {
+  "i": 19,
+  "tag": "p",
+  "text": "I keep coming back to a simple test. When I finish a piece, do I remember the argument, or do I remember the ads I dodged? Lately, too often, the ads are what stick. That seems backwards. The article did the difficult work of being interesting. The ads merely got in the way. If a reader leaves a pag",
+  "selector": "#article-body > p:nth-of-type(13)"
+ },
+ {
+  "i": 20,
+  "tag": "h2",
+  "text": "Small fixes, then bigger ones",
+  "selector": "#article-body > h2:nth-of-type(6)"
+ },
+ {
+  "i": 21,
+  "tag": "p",
+  "text": "Some fixes are easy. Publishers can delay the newsletter pop-up until a reader has actually scrolled through most of the piece. They can let the consent dialog remember its answer. They can test a page with one ad format instead of seven. These changes do not solve the business model, but they chang",
+  "selector": "#article-body > p:nth-of-type(14)"
+ },
+ {
+  "i": 22,
+  "tag": "p",
+  "text": "The harder fix is more honest accounting. If the product is the reader's attention, say so, and design for it carefully. If the product is the writing, protect the writing. A page cannot do both at full volume forever. One of them eventually becomes the wrapper for the other.",
+  "selector": "#article-body > p:nth-of-type(15)"
+ },
+ {
+  "i": 23,
+  "tag": "h2",
+  "text": "A calmer reading stack, in practice",
+  "selector": "#article-body > h2:nth-of-type(7)"
+ },
+ {
+  "i": 24,
+  "tag": "li",
+  "text": "Read in a single tab, with notifications off, for the length of one article.",
+  "selector": "#article-body > ul > li:nth-of-type(1)"
+ },
+ {
+  "i": 25,
+  "tag": "li",
+  "text": "Move the read-later queue out of the browser. The tab bar should hold only what you are doing now.",
+  "selector": "#article-body > ul > li:nth-of-type(2)"
+ },
+ {
+  "i": 26,
+  "tag": "li",
+  "text": "Block autoplay by default. It is a reader's setting, not a concession.",
+  "selector": "#article-body > ul > li:nth-of-type(3)"
+ },
+ {
+  "i": 27,
+  "tag": "li",
+  "text": "When a page fights you, switch to reader mode or copy the text somewhere quiet.",
+  "selector": "#article-body > ul > li:nth-of-type(4)"
+ },
+ {
+  "i": 28,
+  "tag": "li",
+  "text": "Open the article in a quiet window.",
+  "selector": "#article-body > ol > li:nth-of-type(1)"
+ },
+ {
+  "i": 29,
+  "tag": "li",
+  "text": "Let the page finish loading, then turn on the side panel or reader view.",
+  "selector": "#article-body > ol > li:nth-of-type(2)"
+ },
+ {
+  "i": 30,
+  "tag": "li",
+  "text": "Read the whole thing before deciding what to save.",
+  "selector": "#article-body > ol > li:nth-of-type(3)"
+ },
+ {
+  "i": 31,
+  "tag": "li",
+  "text": "Close the tab when you are done.",
+  "selector": "#article-body > ol > li:nth-of-type(4)"
+ },
+ {
+  "i": 32,
+  "tag": "h3",
+  "text": "One article, measured by page area",
+  "selector": "#article-body > figure > h3"
+ },
+ {
+  "i": 33,
+  "tag": "figcaption",
+  "text": "A generous estimate, based on a recent Tuesday.",
+  "selector": "#article-body > figure > figcaption"
+ },
+ {
+  "i": 34,
+  "tag": "p",
+  "text": "The web is still a remarkable place to read. Long essays, patient reporting, careful tutorials, strange personal sites: they are all still out there, and easier to publish than ever. The problem is not a shortage of good writing. It is that the writing keeps getting buried under the furniture of the",
+  "selector": "#article-body > p:nth-of-type(16)"
+ },
+ {
+  "i": 35,
+  "tag": "h2",
+  "text": "3 responses",
+  "selector": "section > h2"
+ },
+ {
+  "i": 36,
+  "tag": "p",
+  "text": "The tab-as-memory point hit close to home. I counted forty-one tabs while reading this, and exactly four of them were doing anything useful.",
+  "selector": "section > div:nth-of-type(1) > div:nth-of-type(2) > p"
+ },
+ {
+  "i": 37,
+  "tag": "p",
+  "text": "I keep wanting a reader that works beside the page instead of boiling everything down to a summary I never asked for. This is the first time that trade-off made sense to me.",
+  "selector": "section > div:nth-of-type(2) > div:nth-of-type(2) > p"
+ },
+ {
+  "i": 38,
+  "tag": "p",
+  "text": "Newsletter boxes are the worst. I have been subscribed for years by accident because the close button moved between page load and page load.",
+  "selector": "section > div:nth-of-type(3) > div:nth-of-type(2) > p"
+ }
+]

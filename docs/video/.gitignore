@@ -1,0 +1,8 @@
+# 视频生产线的可再生产物：一条命令就能重跑出来，不必进版本库
+out/
+pipeline/.smoke/
+
+# 音频素材（配音 wav 十几 MB、BGM 上百 MB，均由脚本生成）
+assets/*.wav
+assets/voice/
+assets/voice-sample/
