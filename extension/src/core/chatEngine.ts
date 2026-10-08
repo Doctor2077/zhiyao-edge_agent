@@ -8,10 +8,16 @@ export type ChatErrorCode =
   | 'HTTP_429'
   | 'HTTP_OTHER'
   | 'NEED_ORIGIN_PERMISSION'
+  | 'TIMEOUT'
   | 'NETWORK'
   | 'PARSE'
   | 'ABORT'
   | 'UNKNOWN';
+
+/** 空闲超时：流式期间超过该时长没有任何数据即判定卡死 */
+const IDLE_TIMEOUT_MS = 30000;
+/** 首包超时：发出请求后等待响应头的上限 */
+const FIRST_BYTE_TIMEOUT_MS = 45000;
 
 export class ChatError extends Error {
   code: ChatErrorCode;
@@ -73,6 +79,22 @@ export async function streamChat(opts: StreamChatOptions): Promise<{
   };
   if (tools && tools.length > 0) body.tools = tools;
 
+  // 超时保护：外部 signal 与内部超时共用一条中止通道
+  const inner = new AbortController();
+  let timedOut = false;
+  const onOuterAbort = () => inner.abort();
+  if (signal.aborted) inner.abort();
+  else signal.addEventListener('abort', onOuterAbort, { once: true });
+  let firstTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {
+    timedOut = true;
+    inner.abort();
+  }, FIRST_BYTE_TIMEOUT_MS);
+
+  const clearFirstTimer = () => {
+    if (firstTimer) clearTimeout(firstTimer);
+    firstTimer = null;
+  };
+
   let res: Response;
   try {
     res = await fetch(url, {
@@ -82,9 +104,18 @@ export async function streamChat(opts: StreamChatOptions): Promise<{
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify(body),
-      signal,
+      signal: inner.signal,
     });
+    clearFirstTimer();
   } catch (err) {
+    clearFirstTimer();
+    signal.removeEventListener('abort', onOuterAbort);
+    if (timedOut) {
+      throw new ChatError(
+        'TIMEOUT',
+        `No response within ${Math.round(FIRST_BYTE_TIMEOUT_MS / 1000)}s.`,
+      );
+    }
     if (signal.aborted) throw new ChatError('ABORT', 'aborted');
     throw new ChatError(
       'NEED_ORIGIN_PERMISSION',
@@ -93,15 +124,26 @@ export async function streamChat(opts: StreamChatOptions): Promise<{
   }
 
   if (!res.ok) {
+    clearFirstTimer();
+    signal.removeEventListener('abort', onOuterAbort);
     await handleHttpError(res, signal);
   }
 
   const contentType = res.headers.get('content-type') ?? '';
-  if (contentType.includes('text/event-stream')) {
-    return await streamSse(res, signal, handlers);
-  }
-  // 非流式降级：整体返回
   try {
+    if (contentType.includes('text/event-stream')) {
+      return await streamSse(
+        res,
+        inner.signal,
+        signal,
+        handlers,
+        () => {
+          timedOut = true;
+        },
+        () => timedOut,
+      );
+    }
+    // 非流式降级：整体返回
     const json = await res.json();
     const choice = json?.choices?.[0];
     const toolCalls: RawToolCall[] | null = parseToolCalls(choice?.message?.tool_calls);
@@ -113,8 +155,17 @@ export async function streamChat(opts: StreamChatOptions): Promise<{
     if (content) handlers.onDelta(content);
     handlers.onDone(content, null);
     return { text: content, toolCalls: null };
-  } catch {
+  } catch (err) {
+    if (err instanceof ChatError) throw err;
+    if (timedOut) {
+      throw new ChatError(
+        'TIMEOUT',
+        `Stream stalled for ${Math.round(IDLE_TIMEOUT_MS / 1000)}s.`,
+      );
+    }
     throw new ChatError('PARSE', 'Failed to parse the response.');
+  } finally {
+    signal.removeEventListener('abort', onOuterAbort);
   }
 }
 
@@ -143,7 +194,10 @@ interface AccCall {
 async function streamSse(
   res: Response,
   signal: AbortSignal,
+  outerSignal: AbortSignal,
   handlers: StreamHandlers,
+  markTimedOut: () => void,
+  isTimedOut: () => boolean,
 ): Promise<{ text: string; toolCalls: RawToolCall[] | null }> {
   if (!res.body) {
     throw new ChatError('PARSE', 'Response has no body.');
@@ -153,6 +207,20 @@ async function streamSse(
   let buffer = '';
   let full = '';
   const toolAcc = new Map<number, AccCall>();
+  // 空闲超时：每收到数据就重新计时
+  let idleTimer: ReturnType<typeof setTimeout> | null = null;
+  const armIdle = () => {
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      markTimedOut();
+      reader.cancel().catch(() => {});
+    }, IDLE_TIMEOUT_MS);
+  };
+  const clearIdle = () => {
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = null;
+  };
+  armIdle();
 
   const flush = (lines: string[]) => {
     for (const line of lines) {
@@ -196,6 +264,7 @@ async function streamSse(
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
+      armIdle();
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
       buffer = lines.pop() ?? '';
@@ -204,8 +273,16 @@ async function streamSse(
     const tail = decoder.decode();
     if (tail) flush((buffer + tail).split('\n'));
   } catch (err) {
-    if (signal.aborted) throw new ChatError('ABORT', 'aborted');
+    if (isTimedOut()) {
+      throw new ChatError(
+        'TIMEOUT',
+        `Stream stalled for ${Math.round(IDLE_TIMEOUT_MS / 1000)}s.`,
+      );
+    }
+    if (signal.aborted || outerSignal.aborted) throw new ChatError('ABORT', 'aborted');
     throw new ChatError('NETWORK', 'Connection lost while streaming.');
+  } finally {
+    clearIdle();
   }
 
   const calls: RawToolCall[] = Array.from(toolAcc.values())

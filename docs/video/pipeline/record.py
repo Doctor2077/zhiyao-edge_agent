@@ -50,10 +50,14 @@ EXT = os.path.join(ROOT, "extension", ".output", "edge-mv3")
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 SCENES = os.path.join(HERE, "scenes")
 
-# 采集倍率：页面 1.25x、面板 1.6x —— 既保持超采样清晰度，又把每帧解码+缩放成本压进 40ms 预算
-PAGE_DSF = 1.25
-PANEL_DSF = 1.6
+# 采集倍率：页面 1.6x、面板 2.0x。必须**不低于**镜头放大倍率，否则推近时等于把源图
+# 拉伸放大，整块画面发糊（上一版 1.25x 配上 1.9 倍推镜就是这个毛病）。
+PAGE_DSF = 1.60
+PANEL_DSF = 2.00
 JPEG_Q = 92
+
+SRC_FPS = 30.0     # 采集轮写源视频的帧率（网页 / 面板两块「面」）
+STATE_HZ = 120.0   # 采集轮采样镜头与光标状态的频率，渲染轮按它插值到 120fps
 
 
 # ------------------------------------------------------------------ 采集源
@@ -162,6 +166,99 @@ class Renderer(threading.Thread):
         self.frames = i
 
 
+class Capture(threading.Thread):
+    """采集轮：不做实时合成，只干两件事 ——
+
+    * 把网页 / 面板两块「面」按 SRC_FPS 录成源视频；
+    * 按 STATE_HZ 采样镜头、面板滑出量与光标位置。
+
+    真正的合成交给 render.py 离线跑。这样成片能是真 120fps：镜头推拉、光标移动、
+    大字入场全部逐帧重算，不再受实时渲染每帧 40ms 预算的拖累。
+    帧号 ↔ 时间的映射是线性的（落后时循环不 sleep，会自己追平）。
+    """
+
+    def __init__(self, rec, out_dir: str, ffmpeg: str):
+        super().__init__(daemon=True)
+        self.rec = rec
+        self.dir = out_dir
+        self.ffmpeg = ffmpeg
+        self.t0 = rec.t0
+        self.procs: dict = {}
+        self.frames = 0
+        self.stopped = False
+        self.sizes_out: dict = {}
+        self._last_v: dict = {}
+        self._last_buf: dict = {}
+
+    def run(self) -> None:
+        os.makedirs(self.dir, exist_ok=True)
+        # 尺寸要等 pump 过一帧才知道，而开编码器就需要它 —— 先探一帧
+        for src in self.rec.sources.values():
+            for _ in range(120):
+                src.pump()
+                if src.size:
+                    break
+                time.sleep(0.05)
+        for name, src in self.rec.sources.items():
+            w, h = src.size
+            # yuv420p 要求偶数边长，而网页面采集出来是 1525×1150 —— 裁掉那一列，
+            # 裁剪后的尺寸必须记进日志，渲染轮是按它解码的。
+            self.sizes_out[name] = (w - (w % 2), h - (h % 2))
+            w, h = self.sizes_out[name]
+            self.procs[name] = subprocess.Popen([
+                self.ffmpeg, "-y", "-loglevel", "error",
+                "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{w}x{h}",
+                "-r", f"{SRC_FPS:g}", "-i", "-", "-an",
+                "-c:v", "libx264", "-preset", "superfast", "-crf", "16",
+                "-pix_fmt", "yuv420p", os.path.join(self.dir, f"{name}.mp4")],
+                stdin=subprocess.PIPE)
+        step = max(1, int(round(STATE_HZ / SRC_FPS)))
+        print(f"[cap] 源视频 {SRC_FPS:g}fps；状态采样 {STATE_HZ:g}Hz（每 {step} 拍写一帧）", flush=True)
+
+        i = 0
+        while not self.stopped:
+            target = self.t0 + i / STATE_HZ
+            now = time.monotonic()
+            if now < target:
+                time.sleep(target - now)
+            t = time.monotonic() - self.t0
+            comp = self.rec.comp
+            comp.advance(t)
+            self.rec.samples.append([
+                round(t, 5),
+                round(comp.cam.x, 2), round(comp.cam.y, 2),
+                round(comp.cam.w, 2), round(comp.cam.h, 2),
+                round(comp.panel_slide, 4),
+                round(comp.cursor.x, 2), round(comp.cursor.y, 2)])
+            if i % step == 0:
+                for name, src in self.rec.sources.items():
+                    img, v = src.pump()
+                    if img is None:
+                        continue
+                    if self._last_v.get(name) == v and name in self._last_buf:
+                        buf = self._last_buf[name]        # 没有新帧就补上一帧，保持帧率线性
+                    else:
+                        ow, oh = self.sizes_out[name]
+                        if img.size != (ow, oh):
+                            img = img.crop((0, 0, ow, oh))
+                        buf = img.convert("RGB").tobytes()
+                        self._last_v[name] = v
+                        self._last_buf[name] = buf
+                    try:
+                        self.procs[name].stdin.write(buf)
+                    except (BrokenPipeError, ValueError):
+                        pass
+                self.frames += 1
+            i += 1
+
+        for p in self.procs.values():
+            try:
+                p.stdin.close()
+                p.wait(timeout=180)
+            except Exception:
+                p.kill()
+
+
 # ------------------------------------------------------------------ 录制器
 class Recorder:
     def __init__(self, script: dict, tts: dict, args):
@@ -183,6 +280,13 @@ class Recorder:
         self.timeline: list = []
         self.warnings: list = []
         self.cursor_pos = (760.0, 620.0)
+        self.samples: list = []      # 镜头/面板/光标状态采样（采集轮填）
+        self.events: list = []       # 离散事件（大字/标注/卡片/通知…），供离线渲染重放
+
+    def log(self, kind: str, **kw) -> None:
+        """记一条离散事件。渲染轮按 t 重放 —— 采集轮不合成，只负责把「发生了什么」记下来。"""
+        t = round(time.monotonic() - self.t0, 5) if self.t0 else 0.0
+        self.events.append({"t": t, "k": kind, **kw})
 
     # ---------------- 浏览器
     async def launch(self):
@@ -319,6 +423,7 @@ class Recorder:
         y = box[1] + box[3] / 2
         now = time.monotonic() - self.t0
         self.comp.cursor.click(now)
+        self.log("click")
         for t in ("mousePressed", "mouseReleased"):
             await cdp.send("Input.dispatchMouseEvent",
                            {"type": t, "x": x, "y": y, "button": "left", "clickCount": 1})
@@ -358,16 +463,21 @@ class Recorder:
             await self.animate_panel(1.0 if act.get("open", True) else 0.0, act.get("dur", 0.55))
         elif kind == "card":
             img = {"intro": cards.intro_card, "outro": cards.outro_card}[act["name"]]()
+            self.log("card", name=act["name"], to=1.0, dur=act.get("fade", 0.7))
             await self.fade_card(img, act.get("fade", 0.7))
         elif kind == "card_off":
+            self.log("card", name=None, to=0.0, dur=act.get("fade", 0.7))
             await self.fade_card(None, act.get("fade", 0.7))
         elif kind == "caption":
+            self.log("sub", text=act.get("text", ""))
             self.comp.caption.set(act.get("text", ""), time.monotonic() - self.t0)
         elif kind == "scene":
             await self.page.goto(f"http://127.0.0.1:{self.args.port}/scenes/{act['page']}.html")
             await self.page.wait_for_timeout(act.get("settle", 500))
             fav = tuple(act.get("favicon", [0, 120, 212]))
             self.comp.set_page_meta(act.get("url", ""), act.get("title", ""), fav)
+            self.log("pagemeta", url=act.get("url", ""), title=act.get("title", ""),
+                     favicon=list(fav))
         elif kind == "scroll":
             await self.page.evaluate(
                 "([y, ms]) => new Promise(r => { const t0=performance.now(); const y0=window.scrollY;"
@@ -406,40 +516,53 @@ class Recorder:
             if box is None:
                 self.warnings.append(f"highlight 找不到 {act['selector']}")
                 return
-            self.comp.highlights.add(self.to_window(target, box), time.monotonic() - self.t0,
-                                     act.get("dur", 2.2), tuple(act.get("color", [255, 92, 92])))
+            win = self.to_window(target, box)
+            self.log("highlight", rect=list(win), dur=act.get("dur", 2.2),
+                     color=list(act.get("color", [72, 140, 255])))
+            self.comp.highlights.add(win, time.monotonic() - self.t0,
+                                     act.get("dur", 2.2), tuple(act.get("color", [72, 140, 255])))
         elif kind == "toast":
             img = cards.toast(act.get("title", ""), act.get("body", ""))
             x = C.CANVAS_W - img.width - 42
             y = 42
             self.comp.toast = (img, x, y, 0.0)
-            soon = time.monotonic() - self.t0
+            self.log("toast", title=act.get("title", ""), body=act.get("body", ""),
+                     to=1.0, dur=act.get("fade", 0.35))
             await self.fade_toast(1.0, act.get("fade", 0.35))
             await asyncio.sleep(act.get("dur", 4.0))
+            self.log("toast", title=act.get("title", ""), body=act.get("body", ""),
+                     to=0.0, dur=act.get("fade", 0.5))
             await self.fade_toast(0.0, act.get("fade", 0.5))
         elif kind == "sleep":
             await asyncio.sleep(act.get("t", 0.5))
         else:
             self.warnings.append(f"未知动作 {kind}")
 
+    # 三个补间都按**经过的时间**插值，而不是走固定步数：采集轮以 120Hz 采样，
+    # 固定步数（原来按 25fps 算）会在 120fps 重放时露出台阶。
     async def animate_panel(self, to: float, dur: float) -> None:
         frm = self.comp.panel_slide
-        steps = max(2, int(dur * self.fps))
-        for i in range(1, steps + 1):
-            p = i / steps
+        t0 = time.monotonic()
+        while True:
+            p = min(1.0, (time.monotonic() - t0) / max(1e-3, dur))
             e = p * p * (3 - 2 * p)
             self.comp.panel_slide = frm + (to - frm) * e
-            await asyncio.sleep(dur / steps)
+            if p >= 1.0:
+                break
+            await asyncio.sleep(0.004)
 
     async def fade_card(self, img, dur: float):
         frm = self.comp.card[1] if self.comp.card else 0.0
         to = 0.0 if img is None else 1.0
-        steps = max(2, int(dur * self.fps))
-        for i in range(1, steps + 1):
-            p = i / steps
+        t0 = time.monotonic()
+        while True:
+            p = min(1.0, (time.monotonic() - t0) / max(1e-3, dur))
             a = frm + (to - frm) * p
-            self.comp.card = ((img if img is not None else self.comp.card[0]), a) if (img or self.comp.card) else None
-            await asyncio.sleep(dur / steps)
+            self.comp.card = ((img if img is not None else self.comp.card[0]), a) \
+                if (img or self.comp.card) else None
+            if p >= 1.0:
+                break
+            await asyncio.sleep(0.004)
         if img is None:
             self.comp.card = None
 
@@ -447,11 +570,13 @@ class Recorder:
         if not self.comp.toast:
             return
         img, x, y, frm = self.comp.toast
-        steps = max(2, int(dur * 20))
-        for i in range(1, steps + 1):
-            p = i / steps
+        t0 = time.monotonic()
+        while True:
+            p = min(1.0, (time.monotonic() - t0) / max(1e-3, dur))
             self.comp.toast = (img, x, y, frm + (to - frm) * p)
-            await asyncio.sleep(dur / steps)
+            if p >= 1.0:
+                break
+            await asyncio.sleep(0.004)
 
     async def wait_selector(self, target: str, selector: str, timeout: float) -> bool:
         end = time.monotonic() + timeout
@@ -494,13 +619,19 @@ class Recorder:
                   "-pix_fmt", "yuv420p", "-movflags", "+faststart", self.args.out]
         self.t0 = time.monotonic()
         renderer = None
+        capturer = None
         if not self.args.dry_run:
-            os.makedirs(os.path.dirname(os.path.abspath(self.args.out)), exist_ok=True)
-            self.ff = subprocess.Popen(ff_cmd, stdin=subprocess.PIPE)
-            renderer = Renderer(self.comp, self.sources["page"], self.sources["panel"],
-                                self.ff, self.fps, self.t0)
-            renderer.debug = bool(self.args.debug_overlay)
-            renderer.start()
+            if getattr(self.args, "capture", ""):
+                # 采集模式：只录源视频 + 状态日志，画面交给 render.py 离线出 120fps
+                capturer = Capture(self, self.args.capture, self.args.ffmpeg)
+                capturer.start()
+            else:
+                os.makedirs(os.path.dirname(os.path.abspath(self.args.out)), exist_ok=True)
+                self.ff = subprocess.Popen(ff_cmd, stdin=subprocess.PIPE)
+                renderer = Renderer(self.comp, self.sources["page"], self.sources["panel"],
+                                    self.ff, self.fps, self.t0)
+                renderer.debug = bool(self.args.debug_overlay)
+                renderer.start()
 
         only = {x.strip() for x in (self.args.shots or "").split(",") if x.strip()}
         for shot in self.shots:
@@ -509,6 +640,12 @@ class Recorder:
             await self.run_shot(shot)
 
         elapsed = time.monotonic() - self.t0
+        if capturer is not None:
+            capturer.stopped = True
+            while capturer.is_alive():
+                await asyncio.sleep(0.1)
+            print(f"[cap] 源视频完成：{capturer.frames} 帧 / {capturer.frames / SRC_FPS:.1f}s，"
+                  f"状态采样 {len(self.samples)} 条，事件 {len(self.events)} 条", flush=True)
         if renderer is not None:
             renderer.finish_at = elapsed
             while renderer.is_alive():
@@ -522,8 +659,15 @@ class Recorder:
         if renderer is not None:
             stats = {"frames": renderer.frames, "late": renderer.late,
                      "dropped": renderer.dropped, "max_lag": round(renderer.max_lag, 3)}
-        return {"video": self.script.get("id"), "fps": self.fps, "duration": round(elapsed, 3),
-                "shots": self.timeline, "warnings": self.warnings, "stats": stats}
+        out = {"video": self.script.get("id"), "fps": self.fps, "duration": round(elapsed, 3),
+               "shots": self.timeline, "warnings": self.warnings, "stats": stats}
+        if capturer is not None:
+            out["capture"] = {
+                "dir": self.args.capture, "src_fps": SRC_FPS, "state_hz": STATE_HZ,
+                "frames": capturer.frames, "duration": round(elapsed, 5),
+                "sizes": {k: list(v) for k, v in capturer.sizes_out.items()},
+                "samples": self.samples, "events": self.events}
+        return out
 
     def sources_page_placeholder(self):
         return Image.new("RGB", (int(C.PAGE_W * PAGE_DSF), int(C.PAGE_H * PAGE_DSF)), (255, 255, 255))
@@ -539,13 +683,20 @@ class Recorder:
         speech = float(line.get("speech", 0.0)) or (len(shot.get("narration", "")) / 4.4)
         pad_tail = float(shot.get("tail", 1.1))
 
+        now0 = time.monotonic() - self.t0
+        self.log("headline", text=shot.get("headline", ""), kicker=shot.get("kicker", ""),
+                 pos=shot.get("headline_pos", "bottom"))
+        self.comp.headline.set(shot.get("headline", ""), shot.get("kicker", ""), now0,
+                               shot.get("headline_pos", "bottom"))
         if shot.get("caption") is not None:
-            self.comp.caption.set(shot["caption"], time.monotonic() - self.t0)
+            self.log("sub", text=shot["caption"])
+            self.comp.caption.set(shot["caption"], now0)
         elif shot.get("narration"):
             # 字幕用短句：过长时在标点处截断
             n = shot["narration"]
             short = n.split("。")[0] + "。" if "。" in n else n
-            self.comp.caption.set(short, time.monotonic() - self.t0)
+            self.log("sub", text=short)
+            self.comp.caption.set(short, now0)
 
         if "camera" in shot and not any(a.get("do") == "camera" for a in shot.get("actions", [])):
             self.comp.cam.to(C.preset(shot["camera"]), shot.get("camera_dur", 0.0) or 0.001,
@@ -559,7 +710,8 @@ class Recorder:
                     await asyncio.sleep(wait)
             await self.do_action(act)
 
-        need = narr_at + speech + pad_tail
+        # 静默片：镜头长度直接由 dur 定，不再靠旁白净长反推
+        need = float(shot["dur"]) if shot.get("dur") is not None else narr_at + speech + pad_tail
         now = time.monotonic() - self.t0 - t_start
         if now < need:
             await asyncio.sleep(need - now)
@@ -604,6 +756,8 @@ async def main() -> int:
     ap.add_argument("--port", type=int, default=8791)
     ap.add_argument("--dict", dest="dict_path", default="")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--capture", default="",
+                    help="采集模式：把源视频与状态日志写进该目录，不做实时合成（供 render.py 出 120fps）")
     ap.add_argument("--shots", default="", help="只录指定镜头（逗号分隔），用于快速看画面")
     ap.add_argument("--probe", default="", help="录制后抽帧到 .smoke/probe-<t>.png，逗号分隔秒数")
     ap.add_argument("--debug-overlay", action="store_true", help="画面左上角烧入时间/画面源帧龄，用于诊断同步")

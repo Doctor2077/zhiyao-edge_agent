@@ -1,0 +1,509 @@
+{
+  "id": "promo60",
+  "title": "执要 Agent · 宣传片 60 秒（静默）",
+  "fps": 25,
+  "scenario": "promo",
+  "cps": 60,
+  "shots": [
+    {
+      "id": "s1",
+      "camera": "wide",
+      "panel_slide": 1.0,
+      "dur": 6.0,
+      "caption": "",
+      "headline": "",
+      "kicker": "",
+      "actions": [
+        {
+          "at": 0.0,
+          "do": "scene",
+          "page": "shop",
+          "settle": 300,
+          "url": "https://item.yunji.com/100058712345.html",
+          "title": "云声 X5 Pro 无线降噪耳机 - 云集商城",
+          "favicon": [
+            225,
+            37,
+            27
+          ]
+        },
+        {
+          "at": 0.1,
+          "do": "card",
+          "name": "intro",
+          "fade": 0.7
+        },
+        {
+          "at": 3.2,
+          "do": "card_off",
+          "fade": 0.8
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "camera": "page_top",
+      "camera_dur": 1.0,
+      "dur": 5.5,
+      "kicker": "痛点",
+      "headline": "网页太长，广告太多",
+      "headline_pos": "bottom",
+      "caption": "长文读不完 · 广告满天飞",
+      "actions": [
+        {
+          "at": 1.3,
+          "do": "highlight",
+          "target": "page",
+          "selector": ".ad-top",
+          "dur": 1.6
+        },
+        {
+          "at": 2.5,
+          "do": "scroll",
+          "to": 640,
+          "dur": 0.9
+        },
+        {
+          "at": 3.2,
+          "do": "highlight",
+          "target": "page",
+          "selector": ".ad-inline",
+          "dur": 1.5
+        },
+        {
+          "at": 4.2,
+          "do": "highlight",
+          "target": "page",
+          "selector": ".ad-float",
+          "dur": 1.3
+        },
+        {
+          "at": 4.9,
+          "do": "scroll",
+          "to": 0,
+          "dur": 0.6
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "camera": "wide",
+      "dur": 6.5,
+      "kicker": "网页对话",
+      "headline": "打开就已经读完这一页",
+      "headline_pos": "bottom",
+      "caption": "正文 · 视口 · 选区，都是上下文",
+      "actions": [
+        {
+          "at": 0.2,
+          "do": "camera",
+          "to": "panel_top",
+          "dur": 1.1
+        },
+        {
+          "at": 2.0,
+          "do": "camera",
+          "to": "panel",
+          "dur": 0.8
+        },
+        {
+          "at": 3.2,
+          "do": "highlight",
+          "target": "panel",
+          "selector": ".app-header",
+          "dur": 2.4,
+          "color": [
+            72,
+            140,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "camera": "panel",
+      "dur": 7.5,
+      "kicker": "网页对话",
+      "headline": "就当前页面提问",
+      "headline_pos": "bottom",
+      "caption": "答案来自你正在看的这一页",
+      "actions": [
+        {
+          "at": 0.2,
+          "do": "camera",
+          "to": "panel_bottom",
+          "dur": 0.8
+        },
+        {
+          "at": 1.1,
+          "do": "click",
+          "target": "panel",
+          "selector": ".composer textarea",
+          "hold": 0.15
+        },
+        {
+          "at": 1.4,
+          "do": "type",
+          "target": "panel",
+          "into": ".composer textarea",
+          "text": "这个耳机多少钱？有什么优惠？",
+          "speed": 0.05
+        },
+        {
+          "at": 2.4,
+          "do": "enter",
+          "target": "panel"
+        },
+        {
+          "at": 2.8,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".send-btn.stop",
+          "timeout": 20
+        },
+        {
+          "at": 3.2,
+          "do": "highlight",
+          "target": "panel",
+          "selector": ".page-chip",
+          "dur": 2.2,
+          "color": [
+            72,
+            140,
+            255
+          ]
+        },
+        {
+          "at": 4.6,
+          "do": "camera",
+          "to": "panel_top",
+          "dur": 1.0
+        },
+        {
+          "at": 5.6,
+          "do": "wait_gone",
+          "target": "panel",
+          "selector": ".send-btn.stop",
+          "timeout": 40
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "camera": "panel",
+      "dur": 11.0,
+      "kicker": "Agent 操作",
+      "headline": "17 个工具，真的动手操作网页",
+      "headline_pos": "bottom",
+      "caption": "每一步都等你点头",
+      "actions": [
+        {
+          "at": 0.2,
+          "do": "camera",
+          "to": "panel_zoom",
+          "dur": 0.7
+        },
+        {
+          "at": 0.9,
+          "do": "click",
+          "target": "panel",
+          "selector": ".composer textarea",
+          "hold": 0.15
+        },
+        {
+          "at": 1.1,
+          "do": "type",
+          "target": "panel",
+          "into": ".composer textarea",
+          "text": "帮我把这个页面的广告都去掉",
+          "speed": 0.05
+        },
+        {
+          "at": 2.0,
+          "do": "enter",
+          "target": "panel"
+        },
+        {
+          "at": 2.2,
+          "do": "camera",
+          "to": "wide",
+          "dur": 0.9
+        },
+        {
+          "at": 3.7,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 4.6,
+          "do": "highlight",
+          "target": "page",
+          "selector": ".ad-top",
+          "dur": 2.0
+        },
+        {
+          "at": 5.0,
+          "do": "click",
+          "target": "panel",
+          "selector": ".action-card .btn-primary",
+          "hold": 0.5
+        },
+        {
+          "at": 5.9,
+          "do": "wait_gone",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 6.2,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 6.4,
+          "do": "highlight",
+          "target": "page",
+          "selector": ".ad-float",
+          "dur": 2.0
+        },
+        {
+          "at": 6.8,
+          "do": "click",
+          "target": "panel",
+          "selector": ".action-card .btn-primary",
+          "hold": 0.5
+        },
+        {
+          "at": 7.7,
+          "do": "wait_gone",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 8.0,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 8.2,
+          "do": "highlight",
+          "target": "page",
+          "selector": ".ad-inline",
+          "dur": 2.0
+        },
+        {
+          "at": 8.6,
+          "do": "click",
+          "target": "panel",
+          "selector": ".action-card .btn-primary",
+          "hold": 0.5
+        },
+        {
+          "at": 9.5,
+          "do": "wait_gone",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 9.8,
+          "do": "camera",
+          "to": "page",
+          "dur": 1.0
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "camera": "page_top",
+      "dur": 9.5,
+      "kicker": "整页翻译",
+      "headline": "整页翻译，一键换译文",
+      "headline_pos": "bottom",
+      "caption": "刷新即恢复英文原文",
+      "actions": [
+        {
+          "at": 0.1,
+          "do": "scene",
+          "page": "article",
+          "settle": 500,
+          "url": "https://themargin.blog/why-reading-the-web-feels-broken",
+          "title": "Why Reading the Web Still Feels Broken — The Margin",
+          "favicon": [
+            15,
+            92,
+            74
+          ]
+        },
+        {
+          "at": 0.8,
+          "do": "scroll",
+          "to": 420,
+          "dur": 1.0
+        },
+        {
+          "at": 2.2,
+          "do": "camera",
+          "to": "panel_zoom",
+          "dur": 0.8
+        },
+        {
+          "at": 3.2,
+          "do": "click",
+          "target": "panel",
+          "selector": ".composer textarea",
+          "hold": 0.15
+        },
+        {
+          "at": 3.5,
+          "do": "type",
+          "target": "panel",
+          "into": ".composer textarea",
+          "text": "把这一页翻译成中文",
+          "speed": 0.05
+        },
+        {
+          "at": 4.3,
+          "do": "enter",
+          "target": "panel"
+        },
+        {
+          "at": 4.6,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".action-card",
+          "timeout": 30
+        },
+        {
+          "at": 5.0,
+          "do": "click",
+          "target": "panel",
+          "selector": ".action-card .btn-primary",
+          "hold": 0.6
+        },
+        {
+          "at": 6.0,
+          "do": "camera",
+          "to": "page_top",
+          "dur": 1.0
+        },
+        {
+          "at": 6.6,
+          "do": "wait_gone",
+          "target": "panel",
+          "selector": ".send-btn.stop",
+          "timeout": 40
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "camera": "panel_bottom",
+      "dur": 6.5,
+      "kicker": "定时任务",
+      "headline": "盯住一个页面，变了就叫你",
+      "headline_pos": "bottom",
+      "caption": "价格 · 库存 · 状态一变，系统通知直接找你",
+      "actions": [
+        {
+          "at": 0.8,
+          "do": "click",
+          "target": "panel",
+          "selector": ".composer-plus",
+          "hold": 0.4
+        },
+        {
+          "at": 1.7,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".composer-menu .composer-menu-item:nth-child(2)",
+          "timeout": 10
+        },
+        {
+          "at": 2.0,
+          "do": "click",
+          "target": "panel",
+          "selector": ".composer-menu .composer-menu-item:nth-child(2)",
+          "hold": 0.8,
+          "move": 0.4
+        },
+        {
+          "at": 3.1,
+          "do": "wait",
+          "target": "panel",
+          "selector": ".quick-task-form",
+          "timeout": 10
+        },
+        {
+          "at": 3.6,
+          "do": "toast",
+          "title": "价格已降至 ¥1,099",
+          "body": "云声 X5 Pro · 定时任务",
+          "fade": 0.4,
+          "dur": 1.8
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "camera": "panel_top",
+      "dur": 6.0,
+      "kicker": "隐私",
+      "headline": "没有服务器 · 没有账号 · 没有埋点",
+      "headline_pos": "bottom",
+      "caption": "密钥与数据只存在你自己的浏览器里",
+      "actions": [
+        {
+          "at": 1.2,
+          "do": "click",
+          "target": "panel",
+          "selector": ".app-nav button:nth-child(5)",
+          "hold": 0.4
+        },
+        {
+          "at": 2.4,
+          "do": "camera",
+          "to": "panel",
+          "dur": 0.9
+        },
+        {
+          "at": 3.6,
+          "do": "highlight",
+          "target": "panel",
+          "selector": ".app-nav",
+          "dur": 1.8,
+          "color": [
+            72,
+            140,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s9",
+      "camera": "panel",
+      "dur": 5.0,
+      "caption": "",
+      "headline": "",
+      "kicker": "",
+      "actions": [
+        {
+          "at": 0.0,
+          "do": "card",
+          "name": "outro",
+          "fade": 0.9
+        }
+      ]
+    }
+  ]
+}
